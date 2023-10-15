@@ -4,8 +4,7 @@
 <li><a href="https://github.com/ldv236">Лепехо Дмитрий</a></li>
 <li><a href="https://github.com/HeimTN">Зарецкий Михаил</a></li>
 <li><a href="https://github.com/beshik7">Бешкарев Артем</a></li>
-<li><a href="https://github.com/Kseniaefimchenko">Ефимченко Ксения</a></li>
-<ul>
+<li><a href="https://github.com/Kseniaefimchenko">Ефимченко Ксения</a></li><ul>
   
 # Функционал для пользователя
 ## Определение запроса
