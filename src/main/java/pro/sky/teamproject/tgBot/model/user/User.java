@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.model;
+package pro.sky.teamproject.tgBot.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -31,6 +31,9 @@ public class User {
 
     @CreationTimestamp
     private Timestamp createdAt;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

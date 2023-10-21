@@ -8,6 +8,7 @@ CREATE TABLE users
     name        TEXT,
     phone       TEXT,
     created_at  TIMESTAMP NOT NULL,
+    role        TEXT,
 
     CONSTRAINT user_pk          PRIMARY KEY (id),
     CONSTRAINT chat_id_unique   UNIQUE (chat_id)
