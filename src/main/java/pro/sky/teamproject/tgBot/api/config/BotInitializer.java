@@ -7,7 +7,13 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import pro.sky.teamproject.tgBot.api.service.AllTelegramBot;
-
+/**
+ * Класс BotInitializer представляет собой инициализатор бота, который регистрирует Telegram-бота для
+ * обработки входящих обновлений после события запуска контекста приложения.
+ *
+ * Этот класс является компонентом Spring Framework и обеспечивает настройку и регистрацию Telegram-бота
+ * для взаимодействия с Telegram API.
+ */
 @Component
 public class BotInitializer {
 
@@ -16,7 +22,11 @@ public class BotInitializer {
     public BotInitializer(AllTelegramBot telegramBot){
         this.telegramBot = telegramBot;
     }
-
+    /**
+     * Метод init() регистрирует бота при запуске контекста приложения.
+     *
+     * @throws TelegramApiException Возникает в случае ошибки при регистрации бота в Telegram API.
+     */
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException{
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);

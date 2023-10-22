@@ -10,7 +10,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Класс AllTelegramBotConfiguration представляет собой конфигурацию Telegram-бота, включая его имя, токен и
+ * клавиатуры с кнопками для взаимодействия с пользователями.
+ *
+ * Этот класс является конфигурационным компонентом Spring Framework и используется для настройки параметров
+ * Telegram-бота и создания клавиатур с кнопками.
+ */
 @Configuration
 @PropertySource("application.properties")
 public class AllTelegramBotConfiguration {
@@ -24,7 +30,9 @@ public class AllTelegramBotConfiguration {
     private KeyboardRow rowShelters;
     private List<KeyboardRow> rowMainChoice;
     private KeyboardRow rowDefault;
-
+    /**
+     * Конструктор класса AllTelegramBotConfiguration. В конструкторе инициализируются клавиатуры с кнопками.
+     */
     public AllTelegramBotConfiguration(){
         rowShelters = new KeyboardRow();
         rowMainChoice = new ArrayList<>();
