@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.controller;
+package pro.sky.teamproject.tgBot.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.teamproject.tgBot.model.Shelters;
-import pro.sky.teamproject.tgBot.service.ShelterService;
+import pro.sky.teamproject.tgBot.api.service.ShelterService;
 
 @RestController
 @RequestMapping("/shelter")

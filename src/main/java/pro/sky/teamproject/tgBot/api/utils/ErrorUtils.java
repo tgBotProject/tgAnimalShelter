@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.utils;
+package pro.sky.teamproject.tgBot.api.utils;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

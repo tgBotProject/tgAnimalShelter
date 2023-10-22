@@ -1,11 +1,11 @@
-package pro.sky.teamproject.tgBot.service;
+package pro.sky.teamproject.tgBot.api.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.user.Role;
 import pro.sky.teamproject.tgBot.model.user.User;
-import pro.sky.teamproject.tgBot.repository.UserRepository;
+import pro.sky.teamproject.tgBot.api.repository.UserRepository;
 
 import java.util.List;
 

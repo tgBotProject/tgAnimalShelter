@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.service;
+package pro.sky.teamproject.tgBot.api.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Positive;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.adoption.Status;
-import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
+import pro.sky.teamproject.tgBot.api.repository.AdoptionRepository;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 
 import java.time.LocalDate;

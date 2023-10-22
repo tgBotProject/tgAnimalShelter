@@ -1,10 +1,10 @@
-package pro.sky.teamproject.tgBot.service;
+package pro.sky.teamproject.tgBot.api.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Report;
-import pro.sky.teamproject.tgBot.repository.ReportRepository;
+import pro.sky.teamproject.tgBot.api.repository.ReportRepository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
