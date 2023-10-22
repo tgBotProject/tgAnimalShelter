@@ -39,6 +39,17 @@ public class Animal {
 
     @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
     private List<Adoption> adoptions;
+    @ManyToOne
+    @JoinColumn(name = "shelter_id") // имя колонки в таблице animals, которая будет хранить ID связанного приюта.
+    private Shelters shelter;
+
+    public Shelters getShelter() {
+        return shelter;
+    }
+
+    public void setShelter(Shelters shelter) {
+        this.shelter = shelter;
+    }
 
     //  виды животных.
     public enum Species {
