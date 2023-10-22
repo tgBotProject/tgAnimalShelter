@@ -1,5 +1,15 @@
 -- liquibase formatted sql
 
+
+-- changeset kseniaefimchenko:11
+CREATE TABLE shelters
+(
+    id BIGINT PRIMARY KEY ,
+    name TEXT,
+    info TEXT
+)
+
+
 -- changeset ldv236:10
 CREATE TABLE users
 (
@@ -23,8 +33,10 @@ CREATE TABLE animals
     id              BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
 
 
+
     CONSTRAINT animal_pk        PRIMARY KEY (id)
 );
+
 
 -- changeset ldv236:10.2
 CREATE TABLE adoptions

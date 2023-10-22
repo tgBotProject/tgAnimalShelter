@@ -5,10 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 
 import java.time.LocalDate;
 import java.util.List;
+
 
 
 @Data
@@ -22,6 +24,7 @@ public class Animal {
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -67,3 +70,4 @@ public class Animal {
     }
 
 }
+
