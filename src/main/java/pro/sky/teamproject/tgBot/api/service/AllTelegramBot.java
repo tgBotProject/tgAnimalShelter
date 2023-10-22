@@ -20,6 +20,8 @@ import java.util.Map;
  *
  * Этот класс является компонентом Spring Framework и используется для обработки входящих запросов и
  * взаимодействия с Telegram API.
+ *
+ * @author Michail Z. (GH: HeimTN)
  */
 @Component
 public class AllTelegramBot extends TelegramLongPollingBot {
@@ -63,8 +65,8 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
                     sessions.put(chatId, "dog");
                 }
-                case "Информация о приюте" -> sendMessage(chatId, "заглушка");
-                case "Информация как взять питомца" -> sendMessage(chatId, "заглушка");
+                case "О приюте" -> sendMessage(chatId, "заглушка");
+                case "Как взять питомца" -> sendMessage(chatId, "заглушка");
                 case "Отправить отчет" -> sendMessage(chatId, "заглушка");
                 case "Позвать волонтера" -> sendMessage(chatId, "заглушка");
                 case "Выбрать другое животное" -> {

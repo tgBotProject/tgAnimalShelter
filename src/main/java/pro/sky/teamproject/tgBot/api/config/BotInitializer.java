@@ -13,6 +13,8 @@ import pro.sky.teamproject.tgBot.api.service.AllTelegramBot;
  *
  * Этот класс является компонентом Spring Framework и обеспечивает настройку и регистрацию Telegram-бота
  * для взаимодействия с Telegram API.
+ *
+ * @author Michail Z. (GH: HeimTN)
  */
 @Component
 public class BotInitializer {

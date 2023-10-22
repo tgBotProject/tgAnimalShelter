@@ -16,6 +16,8 @@ import java.util.List;
  *
  * Этот класс является конфигурационным компонентом Spring Framework и используется для настройки параметров
  * Telegram-бота и создания клавиатур с кнопками.
+ *
+ * @author Michail Z. (GH: HeimTN)
  */
 @Configuration
 @PropertySource("application.properties")
@@ -46,8 +48,8 @@ public class AllTelegramBotConfiguration {
         KeyboardRow temp1 = new KeyboardRow();
         KeyboardRow temp2 = new KeyboardRow();
         KeyboardRow temp3 = new KeyboardRow();
-        temp.add("Информация о приюте");
-        temp1.add("Информация как взять питомца");
+        temp.add("О приюте");
+        temp1.add("Как взять питомца");
         temp2.add("Отправить отчет");
         temp3.add("Позвать волонтера");
         rowMainChoice.add(temp);
