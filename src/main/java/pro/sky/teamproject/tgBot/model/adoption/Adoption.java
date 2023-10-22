@@ -1,12 +1,18 @@
 package pro.sky.teamproject.tgBot.model.adoption;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pro.sky.teamproject.tgBot.model.Animal;
-import pro.sky.teamproject.tgBot.model.User;
+
+
+import pro.sky.teamproject.tgBot.model.user.User;
+
 
 import java.time.LocalDate;
 
@@ -31,13 +37,16 @@ public class Adoption {
     private User user;
 
     @FutureOrPresent
-    @NotNull
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate adoptedDate;
 
     @Future
-    @NotNull
     private LocalDate trialEndDate;
 
     @Enumerated(EnumType.STRING)
-    private AdoptionStatus adoptionStatus;
+    private Status status;
+
+    private String note;
+
 }
