@@ -3,12 +3,14 @@
 -- changeset ldv236:10
 CREATE TABLE users
 (
+
     id              BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
     chat_id         BIGINT NOT NULL,
     name            TEXT,
     phone           TEXT,
     created_at      TIMESTAMP NOT NULL,
     role            TEXT,
+
 
     CONSTRAINT user_pk          PRIMARY KEY (id),
     CONSTRAINT chat_id_unique   UNIQUE (chat_id)
@@ -17,7 +19,9 @@ CREATE TABLE users
 -- changeset ldv236:10.1
 CREATE TABLE animals
 (
+
     id              BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+
 
     CONSTRAINT animal_pk        PRIMARY KEY (id)
 );
@@ -25,6 +29,7 @@ CREATE TABLE animals
 -- changeset ldv236:10.2
 CREATE TABLE adoptions
 (
+
     id              BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
     animal_id       BIGSERIAL NOT NULL,
     user_id         BIGSERIAL NOT NULL,
@@ -36,4 +41,5 @@ CREATE TABLE adoptions
     CONSTRAINT adoption_pk          PRIMARY KEY (id),
     CONSTRAINT adoption_animal_fk   FOREIGN KEY (animal_id)     REFERENCES animals(id),
     CONSTRAINT adoption_user_fk     FOREIGN KEY (user_id)       REFERENCES users(id)
+
 );
