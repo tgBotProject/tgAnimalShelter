@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.utils;
+package pro.sky.teamproject.tgBot.utils;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -14,7 +14,7 @@ public class ErrorUtils {
             errorMsg.append(error.getField())
                     .append(" - ")
                     .append(error.getDefaultMessage())
-                    /*.append("\n")*/;
+                    .append("\n");
         }
         return errorMsg.toString();
     }

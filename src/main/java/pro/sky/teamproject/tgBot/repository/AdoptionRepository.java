@@ -1,11 +1,11 @@
-package pro.sky.teamproject.tgBot.api.repository;
+package pro.sky.teamproject.tgBot.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 import pro.sky.teamproject.tgBot.model.adoption.Status;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,5 +22,5 @@ public interface AdoptionRepository extends JpaRepository<Adoption, Long> {
 
     List<Adoption> findByUserIdAndStatusLike(Long userId, Status status);
 
-    List<Adoption> findByTrialEndDateIsBeforeAndStatusLike(LocalDateTime time, Status status);
+    List<Adoption> findByTrialEndDateIsBeforeAndStatusLike(LocalDate date, Status status);
 }

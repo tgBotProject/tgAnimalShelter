@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.config;
+package pro.sky.teamproject.tgBot.config;
 
 
 import org.springframework.beans.factory.annotation.Value;

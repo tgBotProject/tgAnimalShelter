@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.service;
+package pro.sky.teamproject.tgBot.service;
 
 import pro.sky.teamproject.tgBot.model.Animal;
 

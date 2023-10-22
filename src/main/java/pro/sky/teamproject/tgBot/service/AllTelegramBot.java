@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.service;
+package pro.sky.teamproject.tgBot.service;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -8,8 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import pro.sky.teamproject.tgBot.api.config.AllTelegramBotConfiguration;
-import pro.sky.teamproject.tgBot.model.User;
+import pro.sky.teamproject.tgBot.config.AllTelegramBotConfiguration;
 
 import java.util.HashMap;
 import java.util.List;

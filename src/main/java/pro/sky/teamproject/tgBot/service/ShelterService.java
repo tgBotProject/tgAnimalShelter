@@ -1,9 +1,9 @@
-package pro.sky.teamproject.tgBot.api.service;
+package pro.sky.teamproject.tgBot.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Shelters;
-import pro.sky.teamproject.tgBot.api.repository.ShelterRepository;
+import pro.sky.teamproject.tgBot.repository.ShelterRepository;
 
 @Service
 public class ShelterService {

@@ -1,10 +1,10 @@
-package pro.sky.teamproject.tgBot.api.service;
+package pro.sky.teamproject.tgBot.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Animal;
-import pro.sky.teamproject.tgBot.api.repository.AnimalRepository;
+import pro.sky.teamproject.tgBot.repository.AnimalRepository;
 
 import java.util.List;
 /**

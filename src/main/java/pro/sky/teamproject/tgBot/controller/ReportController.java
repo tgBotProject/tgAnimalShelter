@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.controller;
+package pro.sky.teamproject.tgBot.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.teamproject.tgBot.model.Report;
-import pro.sky.teamproject.tgBot.api.service.ReportService;
-import pro.sky.teamproject.tgBot.api.utils.ErrorUtils;
+import pro.sky.teamproject.tgBot.service.ReportService;
+import pro.sky.teamproject.tgBot.utils.ErrorUtils;
 
 import java.util.List;
 

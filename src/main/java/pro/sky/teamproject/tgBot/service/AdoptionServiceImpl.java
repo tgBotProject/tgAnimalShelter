@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.service;
+package pro.sky.teamproject.tgBot.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Positive;
@@ -6,11 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.adoption.Status;
-import pro.sky.teamproject.tgBot.api.repository.AdoptionRepository;
+import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -130,7 +129,7 @@ public class AdoptionServiceImpl implements AdoptionService{
     public void checkAdoptionsOnEndTimeReached() {
 
         List<Adoption> adoptions = repository.findByTrialEndDateIsBeforeAndStatusLike
-                (LocalDateTime.now(), Status.CURRENT);
+                (LocalDate.now(), Status.CURRENT);
         if (adoptions.isEmpty()) {return;}
 
         for (Adoption adoption : adoptions) {

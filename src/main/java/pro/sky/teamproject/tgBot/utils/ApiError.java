@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.utils;
+package pro.sky.teamproject.tgBot.utils;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

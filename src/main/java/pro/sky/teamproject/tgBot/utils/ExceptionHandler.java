@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.utils;
+package pro.sky.teamproject.tgBot.utils;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;

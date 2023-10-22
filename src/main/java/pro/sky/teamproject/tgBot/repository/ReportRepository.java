@@ -1,4 +1,4 @@
-package pro.sky.teamproject.tgBot.api.repository;
+package pro.sky.teamproject.tgBot.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pro.sky.teamproject.tgBot.model.Report;
