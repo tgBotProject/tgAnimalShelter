@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AdoptionService {
 
-    Adoption addAdoption(Adoption adoption);
+    Adoption addAdoption(Long userId, Long animalId);
 
     List<Adoption> findAdoptions();
 

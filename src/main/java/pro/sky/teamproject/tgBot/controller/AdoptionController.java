@@ -34,18 +34,12 @@ public class AdoptionController {
     /* CREATE */
     @Operation(summary = "Добавить новую запись")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Запись успешно добавлена",
-                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Adoption.class))}),
-            @ApiResponse(responseCode = "400", description = "Для указанного юзера длящийся испытательный период")})
-    @PostMapping
-    public ResponseEntity<?> addAdoption(@RequestBody @Valid Adoption adoption,
-                                           BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(ErrorUtils.errorsList(bindingResult), HttpStatus.BAD_REQUEST);
-        }
-        Adoption newAdoption = service.addAdoption(adoption);
-        return ResponseEntity.ok(newAdoption);
+            @ApiResponse(responseCode = "200", description = "Запись успешно добавлена"),
+            @ApiResponse(responseCode = "400", description = "Для указанного юзера или животного есть активное усыновление")})
+    @PostMapping("/user/{userId}/animal/{animalId}")
+    public ResponseEntity<?> addAdoption(@PathVariable Long userId, @PathVariable Long animalId) {
+
+        return ResponseEntity.ok(service.addAdoption(userId, animalId));
     }
 
     /* READ */
