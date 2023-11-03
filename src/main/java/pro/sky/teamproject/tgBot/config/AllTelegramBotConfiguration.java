@@ -32,6 +32,7 @@ public class AllTelegramBotConfiguration {
     private KeyboardRow rowShelters;
     private List<KeyboardRow> rowMainChoice;
     private KeyboardRow rowDefault;
+    private List<KeyboardRow> rowInfoShelterChoice;
     /**
      * Конструктор класса AllTelegramBotConfiguration. В конструкторе инициализируются клавиатуры с кнопками.
      */
@@ -39,27 +40,26 @@ public class AllTelegramBotConfiguration {
         rowShelters = new KeyboardRow();
         rowMainChoice = new ArrayList<>();
         rowDefault = new KeyboardRow();
+        rowInfoShelterChoice = new ArrayList<>();
 
         rowShelters.add(new KeyboardButton("Кошки"));
         rowShelters.add(new KeyboardButton("Собаки"));
 
-
-        KeyboardRow temp = new KeyboardRow();
-        KeyboardRow temp1 = new KeyboardRow();
-        KeyboardRow temp2 = new KeyboardRow();
-        KeyboardRow temp3 = new KeyboardRow();
-        temp.add("О приюте");
-        temp1.add("Как взять питомца");
-        temp2.add("Отправить отчет");
-        temp3.add("Позвать волонтера");
-        rowMainChoice.add(temp);
-        rowMainChoice.add(temp1);
-        rowMainChoice.add(temp2);
-        rowMainChoice.add(temp3);
+        rowMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("О приюте"))));
+        rowMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Как взять питомца"))));
+        rowMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Отправить отчет"))));
+        rowMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Позвать волонтера"))));
 
         rowDefault.add("Позвать волонтера");
         rowDefault.add("Выбрать другое животное");
         rowDefault.add("Меню");
+
+        rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Общая информация"))));
+        rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Адрес и режим работы"))));
+        rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Получить пропуск для машины"))));
+        rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Техника безопасности"))));
+        rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Отправить нам ваши контактные данные"))));
+        rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Позвать волонтера"))));
     }
 
     public String getBotName(){return botName;}
@@ -68,4 +68,5 @@ public class AllTelegramBotConfiguration {
     public KeyboardRow getRowShelters(){return rowShelters;}
     public List<KeyboardRow> getRowMainChoice(){return rowMainChoice;}
     public KeyboardRow getRowDefault(){return rowDefault;}
+    public List<KeyboardRow> getRowInfoShelterChoice(){return rowInfoShelterChoice;}
 }

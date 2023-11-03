@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.teamproject.tgBot.config.AllTelegramBotConfiguration;
+import pro.sky.teamproject.tgBot.model.Shelters;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +27,19 @@ import java.util.Map;
 public class AllTelegramBot extends TelegramLongPollingBot {
 
     private final AllTelegramBotConfiguration telegramBotConfiguration;
-    private Map<Long, String> sessions;
+    // 1.long - chatId; 2.long - id shelter on DB
+    private Map<Long, Long> sessions;
 
-    public AllTelegramBot(AllTelegramBotConfiguration telegramBotConfiguration){
+    private ShelterService shelterService;
+    private UserService userService;
+
+    public AllTelegramBot(AllTelegramBotConfiguration telegramBotConfiguration,
+                          ShelterService shelterService,
+                          UserService userService){
         this.telegramBotConfiguration = telegramBotConfiguration;
         sessions = new HashMap<>();
+        this.shelterService = shelterService;
+        this.userService = userService;
     }
     @Override
     public String getBotUsername(){
@@ -58,13 +67,13 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                 case "/start" -> startCommandReceived(chatId, update.getMessage());
                 case "Кошки" -> {
                     sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
-                    sessions.put(chatId, "cat");
+                    sessions.put(chatId, 1L);
                 }
                 case "Собаки" -> {
                     sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
-                    sessions.put(chatId, "dog");
+                    sessions.put(chatId, 2L);
                 }
-                case "О приюте" -> sendMessage(chatId, "заглушка");
+                case "О приюте" -> sendButtons(chatId, "Что вы хотите узнать?", telegramBotConfiguration.getRowInfoShelterChoice());
                 case "Как взять питомца" -> sendMessage(chatId, "заглушка");
                 case "Отправить отчет" -> sendMessage(chatId, "заглушка");
                 case "Позвать волонтера" -> sendMessage(chatId, "заглушка");
@@ -74,6 +83,16 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                 }
                 case "Меню" ->
                         sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
+                //Так как инфа у нас пока что только одна в шелтере, то пока что так. Позже надо подправить
+                case "Общая информация", "Адрес и режим работы", "Получить пропуск для машины", "Техника безопасности" ->{
+                    Shelters shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getInfo());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+
+                }
+                case "Отправить нам ваши контактные данные" ->{
+                    checkUser(chatId, update.getMessage());
+                }
                 default ->
                         sendButtons(chatId, "Я затрудняюсь ответить на это, позвать волонтера?", List.of(telegramBotConfiguration.getRowDefault()));
             }
@@ -143,5 +162,16 @@ public class AllTelegramBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e){
             e.printStackTrace();
         }
+    }
+
+    private void checkUser(long chatId, Message message){
+//        if(userService.getUserByChatId() == null){
+//        User user = new User();
+//        user.setChatId(chatId);
+//        user.setName(message.getContact().getFirstName());
+//        user.setPhone(message.getContact().getPhoneNumber());
+//        userService.addUser(user);
+//        }
+        sendMessage(chatId, "Ваши данные обновленны");
     }
 }
