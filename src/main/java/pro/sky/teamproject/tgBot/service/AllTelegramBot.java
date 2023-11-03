@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.teamproject.tgBot.config.AllTelegramBotConfiguration;
@@ -74,7 +75,13 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     sessions.put(chatId, 2L);
                 }
                 case "О приюте" -> sendButtons(chatId, "Что вы хотите узнать?", telegramBotConfiguration.getRowInfoShelterChoice());
-                case "Как взять питомца" -> sendMessage(chatId, "заглушка");
+                case "Как взять питомца" -> {
+                    List<KeyboardRow> keyboardRows = telegramBotConfiguration.getRowHowGetAnimalChoice();
+                    if(sessions.get(chatId) == 2L){
+                        keyboardRows.add(new KeyboardRow(List.of(new KeyboardButton("Советы кинолога"))));
+                    }
+                    sendButtons(chatId, "Что вы хотите узнать?", keyboardRows);
+                }
                 case "Отправить отчет" -> sendMessage(chatId, "заглушка");
                 case "Позвать волонтера" -> sendMessage(chatId, "заглушка");
                 case "Выбрать другое животное" -> {
@@ -84,7 +91,10 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                 case "Меню" ->
                         sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
                 //Так как инфа у нас пока что только одна в шелтере, то пока что так. Позже надо подправить
-                case "Общая информация", "Адрес и режим работы", "Получить пропуск для машины", "Техника безопасности" ->{
+                case "Общая информация", "Адрес и режим работы", "Получить пропуск для машины",
+                        "Техника безопасности", "Правила знакомства", "Список документов", "Рекомендации по транспортировке",
+                        "Рекомендации по обустройству для детёныша", "Рекомендации по обустройству для взрослого животного",
+                        "Рекомендации по обустройству для ограниченного животного", "Причины отказа" ->{
                     Shelters shelters = shelterService.findShelters(sessions.get(chatId));
                     sendMessage(chatId, shelters.getInfo());
                     sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));

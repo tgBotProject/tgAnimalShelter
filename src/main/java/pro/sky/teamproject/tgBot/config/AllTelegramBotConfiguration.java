@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class AllTelegramBotConfiguration {
     private List<KeyboardRow> rowMainChoice;
     private KeyboardRow rowDefault;
     private List<KeyboardRow> rowInfoShelterChoice;
+    private List<KeyboardRow> rowHowGetAnimalChoice;
     /**
      * Конструктор класса AllTelegramBotConfiguration. В конструкторе инициализируются клавиатуры с кнопками.
      */
@@ -41,6 +43,7 @@ public class AllTelegramBotConfiguration {
         rowMainChoice = new ArrayList<>();
         rowDefault = new KeyboardRow();
         rowInfoShelterChoice = new ArrayList<>();
+        rowHowGetAnimalChoice = new ArrayList<>();
 
         rowShelters.add(new KeyboardButton("Кошки"));
         rowShelters.add(new KeyboardButton("Собаки"));
@@ -60,6 +63,16 @@ public class AllTelegramBotConfiguration {
         rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Техника безопасности"))));
         rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Отправить нам ваши контактные данные"))));
         rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Позвать волонтера"))));
+
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Правила знакомства"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Список документов"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Рекомендации по транспортировке"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Рекомендации по обустройству для детёныша"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Рекомендации по обустройству для взрослого животного"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Рекомендации по обустройству для ограниченного животного"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Причины отказа"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Отправить нам ваши контактные данные"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Позвать волонтера"))));
     }
 
     public String getBotName(){return botName;}
@@ -69,4 +82,5 @@ public class AllTelegramBotConfiguration {
     public List<KeyboardRow> getRowMainChoice(){return rowMainChoice;}
     public KeyboardRow getRowDefault(){return rowDefault;}
     public List<KeyboardRow> getRowInfoShelterChoice(){return rowInfoShelterChoice;}
+    public List<KeyboardRow> getRowHowGetAnimalChoice(){return rowHowGetAnimalChoice;}
 }
