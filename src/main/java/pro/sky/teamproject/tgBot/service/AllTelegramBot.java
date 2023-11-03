@@ -10,8 +10,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.teamproject.tgBot.config.AllTelegramBotConfiguration;
+import pro.sky.teamproject.tgBot.model.Report;
 import pro.sky.teamproject.tgBot.model.Shelters;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,14 +35,17 @@ public class AllTelegramBot extends TelegramLongPollingBot {
 
     private ShelterService shelterService;
     private UserService userService;
+    private ReportService reportService;
 
     public AllTelegramBot(AllTelegramBotConfiguration telegramBotConfiguration,
                           ShelterService shelterService,
-                          UserService userService){
+                          UserService userService,
+                          ReportService reportService){
         this.telegramBotConfiguration = telegramBotConfiguration;
         sessions = new HashMap<>();
         this.shelterService = shelterService;
         this.userService = userService;
+        this.reportService = reportService;
     }
     @Override
     public String getBotUsername(){
@@ -63,8 +68,10 @@ public class AllTelegramBot extends TelegramLongPollingBot {
         if(update.hasMessage() && update.getMessage().hasText()){
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
-
-            switch (messageText) {
+            if(messageText.startsWith("Вот мой отчет")){
+                parseReportMessage(chatId, update.getMessage());
+            }
+            else switch (messageText) {
                 case "/start" -> startCommandReceived(chatId, update.getMessage());
                 case "Кошки" -> {
                     sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
@@ -82,7 +89,13 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     }
                     sendButtons(chatId, "Что вы хотите узнать?", keyboardRows);
                 }
-                case "Отправить отчет" -> sendMessage(chatId, "заглушка");
+                case "Отправить отчет" -> {
+                    sendMessage(chatId, "Пожалуйста отправте отчет в формате:");
+                    //В данном случаи номер договора = id в DB нашего adoption, предполагается что когда человек будет забирать питомца, ему сообщат номер договора
+                    sendMessage(chatId, "Вот мой отчет. Номер договора: Опишите как дела у вашего питомца, все ли хорошо. Возникли ли какие нибуть трудности. Прикрепите фото.");
+                    sendMessage(chatId,"Например:");
+                    sendMessage(chatId, "Вот мой отчет. 32: У нас с Кузей все хорошо, едим 3 раза в день, вчера сходили в клинику поставить прививки, сейчас Кузя отдыхает, Смотрите какой он милый) Фото.");
+                }
                 case "Позвать волонтера" -> sendMessage(chatId, "заглушка");
                 case "Выбрать другое животное" -> {
                     sessions.remove(chatId);
@@ -174,6 +187,12 @@ public class AllTelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Проверяет наличие пользователя по идентификатору чата и обновляет данные, если пользователь не найден.
+     *
+     * @param chatId   идентификатор чата пользователя
+     * @param message  объект сообщения, содержащий информацию о пользователе
+     */
     private void checkUser(long chatId, Message message){
 //        if(userService.getUserByChatId() == null){
 //        User user = new User();
@@ -183,5 +202,27 @@ public class AllTelegramBot extends TelegramLongPollingBot {
 //        userService.addUser(user);
 //        }
         sendMessage(chatId, "Ваши данные обновленны");
+    }
+
+    /**
+     * Парсит сообщение, содержащее отчет о питомце, и сохраняет его в базу данных.
+     *
+     * @param chatId   идентификатор чата пользователя
+     * @param message  объект сообщения, содержащий отчет о питомце
+     */
+    private void parseReportMessage(long chatId, Message message){
+        String messageText = message.getText();
+        String[] parts = messageText.split(": ", 2);
+        if(parts.length == 2){
+            String id = parts[0].replaceAll("[^0-9]", "");
+            String text = parts[1];
+            Report report = new Report();
+           // report.setUser(userService.getUserByChatId(chatId));
+            report.setInfo(text);
+           // report.setPhoto(message.getPhoto());
+            report.setDatetime(new Timestamp(System.currentTimeMillis()));
+            reportService.addReport(report);
+            sendButtons(chatId, "Ваш отчет сохранен, вы хотите что нибуть еще?", List.of(telegramBotConfiguration.getRowDefault()));
+        } else sendButtons(chatId, "Ваш отчет нераспознан, попробуйте снова.", List.of(telegramBotConfiguration.getRowDefault()));
     }
 }
