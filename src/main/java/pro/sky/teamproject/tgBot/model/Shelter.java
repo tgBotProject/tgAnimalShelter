@@ -1,18 +1,13 @@
 package pro.sky.teamproject.tgBot.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.util.List;
 import java.util.Objects;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @Entity(name = "shelters")
 public class Shelter {
@@ -54,6 +49,16 @@ public class Shelter {
     @OneToMany(mappedBy = "shelter")
     private List<Animal> animal;
 
+
+    public Shelter(Long id, String name, String addressShelter, String workingTime, String drivingDirections, String securityContactDetails, String info) {
+        this.id = id;
+        this.name = name;
+        this.addressShelter = addressShelter;
+        this.workingTime = workingTime;
+        this.drivingDirections = drivingDirections;
+        this.securityContactDetails = securityContactDetails;
+        this.info = info;
+    }
 
     @Override
     public boolean equals(Object o) {

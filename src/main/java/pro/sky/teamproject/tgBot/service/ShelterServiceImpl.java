@@ -1,4 +1,5 @@
 package pro.sky.teamproject.tgBot.service;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Shelter;
@@ -26,7 +27,8 @@ public class ShelterServiceImpl implements ShelterService {
     @Override
     public Shelter findShelters(Long id) {
         log.debug("Was invoked method for find shelter");
-        return shelterRepository.findById(id).get();
+        return shelterRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Shelter not found [ShelterId=%s]", id)));
     }
 
     /**
@@ -60,7 +62,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getAddressShelterById(Long id) {
-        return String.valueOf(shelterRepository.getAddressShelterById(id));
+        return shelterRepository.getAddressShelterById(id);
     }
 
     /**
@@ -68,7 +70,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getWorkingTimeById(Long id) {
-        return String.valueOf(shelterRepository.getWorkingTimeById(id));
+        return shelterRepository.getWorkingTimeById(id);
     }
 
     /**
@@ -76,7 +78,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getDrivingDirectionsById(Long id) {
-        return String.valueOf(shelterRepository.getDrivingDirectionsById(id));
+        return shelterRepository.getDrivingDirectionsById(id);
     }
 
     /**
@@ -84,7 +86,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getSecurityContactDetailsById(Long id) {
-        return String.valueOf(shelterRepository.getSecurityContactDetailsById(id));
+        return shelterRepository.getSecurityContactDetailsById(id);
     }
 
     /**
@@ -92,7 +94,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getInfoById(Long id) {
-        return String.valueOf(shelterRepository.getInfoById(id));
+        return shelterRepository.getInfoById(id);
     }
 
     @Override
