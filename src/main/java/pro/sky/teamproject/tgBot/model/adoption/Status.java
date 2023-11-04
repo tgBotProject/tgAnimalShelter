@@ -6,7 +6,17 @@ package pro.sky.teamproject.tgBot.model.adoption;
  *     CANCELED - отмененный (не пройденный).
  */
 public enum Status {
-    CURRENT,
-    COMPLETED,
-    CANCELED
+    CURRENT("На испытательном сроке"),
+    COMPLETED("Успешно завершено"),
+    CANCELED("Галя, у нас отмена");
+
+    private String russianDescription;
+
+    Status(String russianDescription) {
+        this.russianDescription = russianDescription;
+    }
+
+    public String getRussianDescription() {
+        return russianDescription;
+    }
 }
