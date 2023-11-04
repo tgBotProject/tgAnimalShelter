@@ -8,7 +8,7 @@ package pro.sky.teamproject.tgBot.model.adoption;
 public enum Status {
     CURRENT("На испытательном сроке"),
     COMPLETED("Успешно завершено"),
-    CANCELED("Галя, у нас отмена");
+    CANCELLED("Галя, у нас отмена");
 
     private String russianDescription;
 
