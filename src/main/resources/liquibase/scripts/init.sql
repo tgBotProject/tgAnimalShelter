@@ -35,6 +35,10 @@ CREATE TABLE animals
 
     CONSTRAINT animal_shelter_fk FOREIGN KEY (shelter_id) REFERENCES shelters(id)
 );
+-- changeset beshik7:9.1
+ALTER TABLE animals
+    ALTER COLUMN photo_url TYPE BYTEA USING photo_url::bytea;
+
 
 -- changeset ldv236:10.2
 CREATE TABLE adoptions
@@ -52,7 +56,7 @@ CREATE TABLE adoptions
     CONSTRAINT adoption_user_fk     FOREIGN KEY (user_id)       REFERENCES users(id)
 );
 
--- changeset beshik7:9.1
+-- changeset beshik7:9.2
 CREATE TABLE reports
 (
     id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -65,3 +69,17 @@ CREATE TABLE reports
 
     CONSTRAINT report_user_fk FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- changeset beshik7:9.3
+ALTER TABLE reports
+    DROP COLUMN report_valid;
+
+-- changeset beshik7:9.4
+ALTER TABLE reports
+    ALTER COLUMN is_report_valid DROP DEFAULT,
+    ALTER COLUMN is_report_valid DROP NOT NULL,
+    ALTER COLUMN is_report_valid SET DEFAULT NULL;
+
+-- changeset beshik7:9.5
+ALTER TABLE reports
+    ALTER COLUMN photo_url TYPE BYTEA USING photo_url::bytea;

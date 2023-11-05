@@ -5,9 +5,15 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pro.sky.teamproject.tgBot.model.Animal;
+import pro.sky.teamproject.tgBot.model.Report;
 import pro.sky.teamproject.tgBot.model.adoption.Status;
+import pro.sky.teamproject.tgBot.model.user.Role;
+import pro.sky.teamproject.tgBot.model.user.User;
 import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
+import pro.sky.teamproject.tgBot.repository.ReportRepository;
+import pro.sky.teamproject.tgBot.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,9 +25,12 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class AdoptionServiceImpl implements AdoptionService{
+public class AdoptionServiceImpl implements AdoptionService {
 
     private final AdoptionRepository repository;
+    private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
+    private final AllTelegramBot allTelegramBot;
 
     /**
      * Создать новую запись об усыновлении.
@@ -135,6 +144,41 @@ public class AdoptionServiceImpl implements AdoptionService{
         for (Adoption adoption : adoptions) {
             adoption.setStatus(Status.COMPLETED);
             repository.save(adoption);
+        }
+    }
+
+    /**
+     * Проверяет наличие актуальных отчетов по каждому усыновлению.
+     * Уведомляет волонтеров, если отчеты отсутствуют более двух дней.
+     * @author Artem beshik7
+     */
+    @Scheduled(cron = "0 0 23 * * *")
+    public void checkReportsAndNotify() {
+        List<Adoption> adoptions = repository.findByTrialEndDateIsBeforeAndStatusLike(LocalDate.now(), Status.CURRENT);
+        LocalDate twoDaysAgo = LocalDate.now().minusDays(2);
+
+        for (Adoption adoption : adoptions) {
+            Animal animal = adoption.getAnimal();
+            Long animalId = animal.getId();
+            List<Report> reports = reportRepository.findReportsByAnimalIdAndDatetimeAfter(animalId, twoDaysAgo.atStartOfDay());
+
+            if (reports.isEmpty()) {
+                // Нет отчетов за последние два дня, уведомляем волонтеров.
+                notifyVolunteers(adoption);
+            }
+        }
+
+    }
+    private void notifyVolunteers(Adoption adoption) {
+        List<User> volunteers = userRepository.findUsersByRole(Role.VOLUNTEER);
+        for (User volunteer : volunteers) {
+            Long volunteerChatId = volunteer.getChatId();
+            if (volunteerChatId != null) {
+                // Используем метод sendMessage из класса AllTelegramBot для отправки уведомлений.
+                String message = String.format("Требуется ваша помощь с животным: %s. Отчеты не поступали более двух дней.",
+                        adoption.getAnimal().getName());
+                allTelegramBot.sendMessage(volunteerChatId, message);
+            }
         }
     }
 }
