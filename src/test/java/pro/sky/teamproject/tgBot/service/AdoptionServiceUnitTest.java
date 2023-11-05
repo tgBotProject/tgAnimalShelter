@@ -11,13 +11,16 @@ import pro.sky.teamproject.tgBot.model.adoption.Status;
 import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AdoptionServiceTest {
+public class AdoptionServiceUnitTest {
 
     @Mock
     private AdoptionRepository repository;
