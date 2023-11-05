@@ -49,7 +49,7 @@ public class AdoptionServiceImpl implements AdoptionService{
         //(которые на испытательном сроке или успешно завершены, т.е. допускаются отмененные)
         Animal animal = animalService.findAnimalById(animalId);
         if (repository.findAdoptionsByAnimalId(animalId).stream()
-                .anyMatch(a -> !a.getStatus().equals(Status.CANCELLED))) {
+                .anyMatch(a -> !a.getStatus().equals(Status.CANCELED))) {
             throw new IllegalStateException(String.format("Animal {%d} already has active adoption", animalId));
         }
 
