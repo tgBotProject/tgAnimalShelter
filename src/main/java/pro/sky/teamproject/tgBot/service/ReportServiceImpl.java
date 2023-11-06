@@ -41,7 +41,7 @@ public class ReportServiceImpl implements ReportService {
         foundReport.setUser(report.getUser());
         foundReport.setPhoto(report.getPhoto());
         foundReport.setInfo(report.getInfo());
-        foundReport.setReportValid(report.getReportValid());
+        foundReport.setIsReportValid(report.getIsReportValid());
 
         return repository.save(foundReport);
     }
@@ -55,7 +55,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Report validateReport(Long id, boolean isValid) {
         Report report = findReportById(id);
-        report.setReportValid(isValid);
+        report.setIsReportValid(isValid);
         return repository.save(report);
     }
 }

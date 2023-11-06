@@ -24,8 +24,9 @@ public class Report {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "photo_url", length = 255)
-    private String photo;
+    @Lob // указывает, что поле должно быть представлено как Large Object
+    @Column(name = "photo_url")
+    private byte[] photo;
 
     private String info;
 
@@ -34,16 +35,7 @@ public class Report {
     private Timestamp datetime;
 
     @Column(name = "is_report_valid")
-    private boolean isReportValid;
+    private Boolean isReportValid;
 
-    private boolean reportValid;
-
-    public boolean getReportValid() {
-        return this.reportValid;
-    }
-
-    public void setReportValid(boolean reportValid) {
-        this.reportValid = reportValid;
-    }
 }
 
