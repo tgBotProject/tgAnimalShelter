@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Animal;
+
 import pro.sky.teamproject.tgBot.model.Report;
 import pro.sky.teamproject.tgBot.model.adoption.Status;
 import pro.sky.teamproject.tgBot.model.user.Role;
+
 import pro.sky.teamproject.tgBot.model.user.User;
 import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
@@ -28,29 +30,47 @@ import java.util.List;
 public class AdoptionServiceImpl implements AdoptionService {
 
     private final AdoptionRepository repository;
+
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
     private final AllTelegramBot allTelegramBot;
 
+    private final UserService userService;
+    private final AnimalService animalService;
+
+
     /**
      * Создать новую запись об усыновлении.
      * Время усыновления устанавливается на текущую дату, время окончания испытательного срока - через 30 дней.
-     * @throws IllegalArgumentException если для указанного пользователя уже есть запись об усыновлении,
-     * по которой идет испытательный срок (статус CURRENT)
-     * @param adoption новая запись
+     * @throws IllegalArgumentException если для указанного пользователя или животного уже есть запись
+     * об активном усыновлении
+     * @param userId,animalId идентификаторы пользователя и животного
      * @return adoption сохраненная в БД запись
      */
     @Override
-    public Adoption addAdoption(Adoption adoption) {
+    public Adoption addAdoption(Long userId, Long animalId) {
 
-        Long userId = adoption.getUser().getId();
+        //проверяем, что юзер с таким id существует, и что у него нет усыновлений на испытательном сроке
+        //(отмененный или успешные допускаются)
+        User user = userService.findUser(userId);
         if (!repository.findByUserIdAndStatusLike(userId, Status.CURRENT).isEmpty()) {
             throw new IllegalArgumentException(String.format("User {%d} already has current adoption", userId));
         }
-        adoption.setAdoptedDate(LocalDate.now());
-        adoption.setTrialEndDate(LocalDate.now().plusDays(30));
-        adoption.setStatus(Status.CURRENT);
-        return repository.save(adoption);
+
+        //проверяем, что животное с таким id существует, и что у него нет активных усыновлений
+        //(которые на испытательном сроке или успешно завершены, т.е. допускаются отмененные)
+        Animal animal = animalService.findAnimalById(animalId);
+        if (repository.findAdoptionsByAnimalId(animalId).stream()
+                .anyMatch(a -> !a.getStatus().equals(Status.CANCELLED))) {
+            throw new IllegalStateException(String.format("Animal {%d} already has active adoption", animalId));
+        }
+
+        //после всех проверок создаем новое усыновление, устанавливаются нужные даты и статус
+        Adoption newAdoption = new Adoption(animal, user);
+        newAdoption.setAdoptedDate(LocalDate.now());
+        newAdoption.setTrialEndDate(LocalDate.now().plusDays(30));
+        newAdoption.setStatus(Status.CURRENT);
+        return repository.save(newAdoption);
     }
 
     @Override

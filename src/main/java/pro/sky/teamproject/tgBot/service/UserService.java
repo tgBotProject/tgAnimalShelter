@@ -12,6 +12,8 @@ public interface UserService {
 
     User findUser(Long id);
 
+    User findUserByChatId(Long chatId);
+
     List<User> findUsersByRole(String role);
 
     User updateUser(User User);

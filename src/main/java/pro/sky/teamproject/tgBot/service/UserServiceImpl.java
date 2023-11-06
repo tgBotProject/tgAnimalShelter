@@ -7,7 +7,9 @@ import pro.sky.teamproject.tgBot.model.user.Role;
 import pro.sky.teamproject.tgBot.model.user.User;
 import pro.sky.teamproject.tgBot.repository.UserRepository;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Service class for User domain objects
@@ -41,9 +43,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> findUsersByRole(String role) {
+    public User findUserByChatId(Long chatId) {
+        User foundUser = repository.findByChatId(chatId);
+        if (foundUser == null) {
+            throw new EntityNotFoundException(String.format("User not found [chatId=%s]", chatId));
+        }
+        return foundUser;
+    }
 
-        List<User> foundUsers = repository.findUsersByRole(role);
+    @Override
+    public List<User> findUsersByRole(String role) {
+        List<Role> roles = Arrays.stream(Role.values()).toList();
+        if (roles.stream().filter(r -> Objects.equals(r.name(), role)).findFirst().isEmpty()) {
+            throw new IllegalArgumentException("Доступные роли: " + roles);
+        }
+        Role requestRole = Role.valueOf(role);
+        List<User> foundUsers = repository.findUsersByRole(requestRole);
 
         if (foundUsers.isEmpty()) {
             throw new EntityNotFoundException(String.format("Not found users with role %s", role));

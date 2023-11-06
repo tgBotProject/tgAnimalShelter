@@ -60,10 +60,9 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@Parameter(description = "Идентификатор пользователя")
                                                 @PathVariable("id") Long id) {
+        //для тестирования поиска по чат_айди, пусть пока полежит
+        //User foundUser = service.findUserByChatId(id);
         User foundUser = service.findUser(id);
-        if (foundUser == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(foundUser);
     }
 
@@ -73,9 +72,9 @@ public class UserController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = Adoption.class)))),
             @ApiResponse(responseCode = "404", description = "Пользователи не найдены")})
-    @GetMapping("/{role}")
+    @GetMapping("/role")
     public ResponseEntity<List<User>> getUsersByRole(@Parameter(description = "Искомая роль (из enum Role)")
-                                                         @PathVariable("role") String role) {
+                                                         @RequestParam String role) {
         List<User> foundUsers = service.findUsersByRole(role);
         if (foundUsers == null) {
             return ResponseEntity.notFound().build();
