@@ -87,3 +87,7 @@ ALTER TABLE reports
 -- changeset beshik7:9.5
 ALTER TABLE reports
     ALTER COLUMN photo_url TYPE BYTEA USING photo_url::bytea;
+
+-- changeset heimtn:45
+ALTER TABLE reports
+    ALTER COLUMN photo_url TYPE TEXT USING photo_url::text;
