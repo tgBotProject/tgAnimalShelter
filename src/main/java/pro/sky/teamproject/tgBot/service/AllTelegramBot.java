@@ -81,7 +81,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                                 sendMessage(chatId, "Отчет от пользователя: "+ r.getUser().getName());
                                 sendMessage(chatId, "ID отчета: " + r.getId());
                                 sendMessage(chatId, r.getInfo());
-                               // sendPhoto(chatId, r.getPhoto());
+                                sendPhoto(chatId, r.getPhoto());
                             }
                         });
                     }
@@ -288,7 +288,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
             List<PhotoSize> photos = message.getPhoto();
             PhotoSize photo = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
             if(photo != null){
-               // report.setPhoto(photo.getFileId());
+               report.setPhoto(photo.getFileId());
             }
             report.setDatetime(new Timestamp(System.currentTimeMillis()));
             reportService.addReport(report);

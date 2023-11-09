@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.teamproject.tgBot.model.Shelters;
+import pro.sky.teamproject.tgBot.model.Shelter;
 import pro.sky.teamproject.tgBot.service.ShelterService;
 
 @RestController
@@ -28,7 +28,7 @@ public class ShelterController {
                                     content = {
                                             @Content(
                                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                                    schema = @Schema(implementation = Shelters.class)
+                                                    schema = @Schema(implementation = Shelter.class)
                                             )
                                     }
                             ),
@@ -41,14 +41,14 @@ public class ShelterController {
                             description = "Новый приют",
                             content = {
                                     @Content(
-                                            schema = @Schema(implementation = Shelters.class)
+                                            schema = @Schema(implementation = Shelter.class)
                                     )
                             }
                     )
             )
     @PostMapping()
-    public ResponseEntity<Shelters> addShelters(@RequestBody Shelters shelters) {
-        Shelters addShelters = shelterService.addShelters(shelters);
+    public ResponseEntity<Shelter> addShelters(@RequestBody Shelter shelters) {
+        Shelter addShelters = shelterService.addShelters(shelters);
         return ResponseEntity.ok(addShelters);
     }
 
@@ -61,7 +61,7 @@ public class ShelterController {
                                     content = {
                                             @Content(
                                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                                    schema = @Schema(implementation = Shelters.class)
+                                                    schema = @Schema(implementation = Shelter.class)
                                             )
                                     }
                             ),
@@ -70,14 +70,14 @@ public class ShelterController {
                             description = "Новая информация о приюте",
                             content = {
                                     @Content(
-                                            schema = @Schema(implementation = Shelters.class)
+                                            schema = @Schema(implementation = Shelter.class)
                                     )
                             }
                     )
             )
     @PutMapping
-    public ResponseEntity<Shelters> editShelters(@RequestBody Shelters shelters) {
-        Shelters editShelters = shelterService.editShelters(shelters);
+    public ResponseEntity<Shelter> editShelters(@RequestBody Shelter shelters) {
+        Shelter editShelters = shelterService.editShelter(shelters);
         if (editShelters == null) {
             return ResponseEntity.status(404).build();
         }
@@ -93,7 +93,7 @@ public class ShelterController {
                                     content = {
                                             @Content(
                                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                                    schema = @Schema(implementation = Shelters.class)
+                                                    schema = @Schema(implementation = Shelter.class)
                                             )
                                     }
                             ),
@@ -112,7 +112,7 @@ public class ShelterController {
                     }
             )
     @GetMapping("{id}")
-    public ResponseEntity<Shelters> findShelters(@RequestParam(required = false) Long id) {
+    public ResponseEntity<Shelter> findShelters(@RequestParam(required = false) Long id) {
         return ResponseEntity.ok(shelterService.findShelters(id));
     }
 
@@ -125,7 +125,7 @@ public class ShelterController {
                                     content = {
                                             @Content(
                                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                                    schema = @Schema(implementation = Shelters.class)
+                                                    schema = @Schema(implementation = Shelter.class)
                                             )
                                     }
                             ),
