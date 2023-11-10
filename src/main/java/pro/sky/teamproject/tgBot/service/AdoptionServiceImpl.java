@@ -180,7 +180,9 @@ public class AdoptionServiceImpl implements AdoptionService {
         for (Adoption adoption : adoptions) {
             Animal animal = adoption.getAnimal();
             Long animalId = animal.getId();
-            List<Report> reports = reportRepository.findReportsByAnimalIdAndDatetimeAfter(animalId, twoDaysAgo.atStartOfDay());
+//            List<Report> reports = reportRepository.findReportsByDatetimeAfter(animalId, LocalDateTime.now());
+            List<Report> reports = reportRepository.findReportsByDatetimeAfter(twoDaysAgo.atStartOfDay());
+//            List<Report> reports = reportRepository.findReportsByAnimalIdAndDatetimeAfter(animalId, twoDaysAgo.atStartOfDay());
 
             if (reports.isEmpty()) {
                 // Нет отчетов за последние два дня, уведомляем волонтеров.

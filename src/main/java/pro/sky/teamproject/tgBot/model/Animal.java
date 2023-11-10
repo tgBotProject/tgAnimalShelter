@@ -26,9 +26,9 @@ public class Animal {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Lob // указывает, что поле должно быть представлено как Large Object
+//    @Lob // указывает, что поле должно быть представлено как Large Object
     @Column(name = "photo_url")
-    private byte[] photoUrl;
+    private String photoUrl;
 
     @Column(name = "birthday")
     private LocalDate birthday;

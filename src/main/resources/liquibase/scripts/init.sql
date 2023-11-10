@@ -91,3 +91,7 @@ ALTER TABLE reports
 -- changeset heimtn:45
 ALTER TABLE reports
     ALTER COLUMN photo_url TYPE TEXT USING photo_url::text;
+
+-- changeset ldv236:43
+ALTER TABLE animals
+    ALTER COLUMN photo_url TYPE TEXT;

@@ -7,5 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    List<Report> findReportsByAnimalIdAndDatetimeAfter(Long animalId, LocalDateTime datetime);
+    List<Report> findReportsByDatetimeAfter(LocalDateTime datetime);
+//    List<Report> findReportsByAnimalIdAndDatetimeAfter(Long animalId, LocalDateTime datetime);
 }

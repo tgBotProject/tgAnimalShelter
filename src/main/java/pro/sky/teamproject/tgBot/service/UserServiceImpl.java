@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findUserByChatId(Long chatId) {
         User foundUser = repository.findByChatId(chatId);
-        if (foundUser == null) {
-            throw new EntityNotFoundException(String.format("User not found [chatId=%s]", chatId));
-        }
+//        if (foundUser == null) {
+//            throw new EntityNotFoundException(String.format("User not found [chatId=%s]", chatId));
+//        }
         return foundUser;
     }
 
