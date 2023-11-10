@@ -69,10 +69,14 @@ public class AllTelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasMessage() && update.getMessage().hasText()){
+        if(update.hasMessage() && update.getMessage().hasText() || update.getMessage().hasContact()){
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
-            if(userService.findUserByChatId(chatId).getRole().equals(Role.VOLUNTEER)){
+            if(update.getMessage().hasContact()){
+                startCommandReceived(chatId, update.getMessage());
+                System.out.println("ghbd");
+            }
+            if(userService.findUserByChatId(chatId) != null && userService.findUserByChatId(chatId).getRole().equals(Role.VOLUNTEER)){
                 switch (messageText) {
                     case "Просмотреть отчеты за сегодня" -> {
                         List<Report> reports = reportService.findAllReports();
@@ -110,7 +114,8 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                 parseReportMessage(chatId, update.getMessage());
             }
             else switch (messageText) {
-                case "/start" -> startCommandReceived(chatId, update.getMessage());
+                //case "/start" -> startCommandReceived(chatId, update.getMessage());
+                case "/start" -> createStartButton(chatId);
                 case "Кошки" -> {
                     sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
                     sessions.put(chatId, 1L);
@@ -182,6 +187,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
      * @param message  Объект Message, содержащий информацию о сообщении от пользователя, включая контактные данные.
      */
     private void startCommandReceived(long chatId, Message message) {
+        System.out.println(message);
         if(userService.findUserByChatId(chatId)== null){
         User user = new User();
         user.setChatId(chatId);
@@ -320,5 +326,25 @@ public class AllTelegramBot extends TelegramLongPollingBot {
         Timestamp endOfToday = new Timestamp(calendar.getTime().getTime());
 
         return timeTask.after(startOfToday) && timeTask.before(endOfToday);
+    }
+    private void createStartButton(long chatId){
+        KeyboardButton startButton = new KeyboardButton("Поделится контактной информацией");
+        startButton.setRequestContact(true);
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setKeyboard(List.of(new KeyboardRow(List.of(startButton))));
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText("Нажимая на кнопку вы предоставляете нам вашу контактную информацию");
+        message.setReplyMarkup(replyKeyboardMarkup);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e){
+            e.printStackTrace();
+        }
     }
 }
