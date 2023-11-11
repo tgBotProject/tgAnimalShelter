@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.teamproject.tgBot.config.AllTelegramBotConfiguration;
 import pro.sky.teamproject.tgBot.model.Report;
-import pro.sky.teamproject.tgBot.model.Shelters;
+import pro.sky.teamproject.tgBot.model.Shelter;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -108,7 +108,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                         "Техника безопасности", "Правила знакомства", "Список документов", "Рекомендации по транспортировке",
                         "Рекомендации по обустройству для детёныша", "Рекомендации по обустройству для взрослого животного",
                         "Рекомендации по обустройству для ограниченного животного", "Причины отказа" ->{
-                    Shelters shelters = shelterService.findShelters(sessions.get(chatId));
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
                     sendMessage(chatId, shelters.getInfo());
                     sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
 
@@ -153,7 +153,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
      * @param chatId Уникальный идентификатор чата, куда будет отправлено сообщение.
      * @param text   Текст сообщения, который необходимо отправить.
      */
-    private void sendMessage(long chatId, String text){
+    public void sendMessage(long chatId, String text){
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(text);

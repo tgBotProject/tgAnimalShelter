@@ -1,22 +1,25 @@
 package pro.sky.teamproject.tgBot.service;
 
-import jakarta.persistence.EntityNotFoundException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import jakarta.persistence.EntityNotFoundException;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 import pro.sky.teamproject.tgBot.model.adoption.Status;
 import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdoptionServiceTests {
 
     @Mock
@@ -72,7 +75,6 @@ public class AdoptionServiceTests {
 
     @Test
     public void testFindAdoptions() {
-        // given
         Adoption adoption1 = new Adoption();
         Adoption adoption2 = new Adoption();
         List<Adoption> expectedAdoptions = Arrays.asList(adoption1, adoption2);

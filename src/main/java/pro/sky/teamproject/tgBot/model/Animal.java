@@ -47,13 +47,13 @@ public class Animal {
 
     @ManyToOne
     @JoinColumn(name = "shelter_id") // имя колонки в таблице animals, которая будет хранить ID связанного приюта.
-    private Shelters shelter;
+    private Shelter shelter;
 
-    public Shelters getShelter() {
+    public Shelter getShelter() {
         return shelter;
     }
 
-    public void setShelter(Shelters shelter) {
+    public void setShelter(Shelter shelter) {
         this.shelter = shelter;
     }
 
