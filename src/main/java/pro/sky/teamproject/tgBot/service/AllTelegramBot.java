@@ -108,7 +108,6 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     }
                 }
             } else switch (messageText) {
-                //case "/start" -> startCommandReceived(chatId, update.getMessage());
                 case "/start" -> {
                     if (userService.findUserByChatId(chatId) == null) createStartButton(chatId);
                     else sendButtons(chatId, "Выбери питомник:", List.of(telegramBotConfiguration.getRowShelters()));
@@ -151,7 +150,6 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     startCommandReceived(chatId, update.getMessage());
                 }
                 case "Меню" -> sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
-                //Так как инфа у нас пока что только одна в шелтере, то пока что так. Позже надо подправить
                 case "Общая информация"  ->{
                     Shelter shelters = shelterService.findShelters(sessions.get(chatId));
                     sendMessage(chatId, shelters.getInfo());
@@ -169,13 +167,46 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     sendMessage(chatId, shelters.getSecurityContactDetails());
                     sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
                 }
-                case "Техника безопасности", "Правила знакомства", "Список документов", "Рекомендации по транспортировке",
-                        "Рекомендации по обустройству для детёныша", "Рекомендации по обустройству для взрослого животного",
-                        "Рекомендации по обустройству для ограниченного животного", "Причины отказа" -> {
+                case "Техника безопасности" ->{
                     Shelter shelters = shelterService.findShelters(sessions.get(chatId));
-                    sendMessage(chatId, shelters.getInfo());
+                    sendMessage(chatId, shelters.getSafetyTechnique());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Список документов"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getDocList());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по транспортировке" ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceTransport());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по обустройству для детёныша"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceCub());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по обустройству для взрослого животного"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceAdult());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по обустройству для ограниченного животного"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceInvalid());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Причины отказа" -> {
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getRefusalReasons());
                     sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
 
+                }
+                case "Советы кинолога" ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getDopInfo());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
                 }
                 case "Отправить нам ваши контактные данные" -> {
                     checkUser(chatId, update.getMessage());

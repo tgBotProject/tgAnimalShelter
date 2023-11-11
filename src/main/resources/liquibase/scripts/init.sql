@@ -95,3 +95,31 @@ ALTER TABLE reports
 -- changeset ldv236:43
 ALTER TABLE animals
     ALTER COLUMN photo_url TYPE TEXT;
+
+-- changeset heimtn:51
+ALTER TABLE shelters
+    ADD COLUMN safety_technique TEXT;
+-- changeset heimtn:51.1
+ALTER TABLE shelters
+    ADD COLUMN dating_rules TEXT;
+-- changeset heimtn:51.2
+ALTER TABLE shelters
+    ADD COLUMN doc_list TEXT;
+-- changeset heimtn:51.3
+ALTER TABLE shelters
+    ADD COLUMN advice_transport TEXT;
+-- changeset heimtn:51.4
+ALTER TABLE shelters
+    ADD COLUMN advice_cub TEXT;
+-- changeset heimtn:51.5
+ALTER TABLE shelters
+    ADD COLUMN advice_adult TEXT;
+-- changeset heimtn:51.6
+ALTER TABLE shelters
+    ADD COLUMN advice_invalid TEXT;
+-- changeset heimtn:51.7
+ALTER TABLE shelters
+    ADD COLUMN refusal_reasons TEXT;
+-- changeset heimtn:51.8
+ALTER TABLE shelters
+    ADD COLUMN dop_info TEXT;
