@@ -1,5 +1,6 @@
 package pro.sky.teamproject.tgBot.service;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Shelter;
@@ -9,8 +10,9 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ShelterServiceImpl implements ShelterService {
-    private ShelterRepository shelterRepository;
+    private final ShelterRepository shelterRepository;
 
     /**
      * Метод добавления приюта.
