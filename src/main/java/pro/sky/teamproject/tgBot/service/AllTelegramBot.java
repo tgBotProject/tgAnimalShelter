@@ -69,20 +69,19 @@ public class AllTelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasMessage() && update.getMessage().hasText() || update.getMessage().hasContact()){
+        if (update.hasMessage() && update.getMessage().hasText() || update.getMessage().hasContact()) {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
-            if(update.getMessage().hasContact()){
+            if (update.getMessage().hasContact()) {
                 startCommandReceived(chatId, update.getMessage());
-                System.out.println("ghbd");
-            }
-            if(userService.findUserByChatId(chatId) != null && userService.findUserByChatId(chatId).getRole().equals(Role.VOLUNTEER)){
+            } else
+            if (userService.findUserByChatId(chatId) != null && userService.findUserByChatId(chatId).getRole().equals(Role.VOLUNTEER)) {
                 switch (messageText) {
                     case "Просмотреть отчеты за сегодня" -> {
                         List<Report> reports = reportService.findAllReports();
                         reports.stream().forEach(r -> {
-                            if(checkDateTime(r.getDatetime())){
-                                sendMessage(chatId, "Отчет от пользователя: "+ r.getUser().getName());
+                            if (checkDateTime(r.getDatetime())) {
+                                sendMessage(chatId, "Отчет от пользователя: " + r.getUser().getName());
                                 sendMessage(chatId, "ID отчета: " + r.getId());
                                 sendMessage(chatId, r.getInfo());
                                 sendPhoto(chatId, r.getPhoto());
@@ -94,28 +93,25 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                         sendMessage(chatId, "Ок: *ID отчета*");
                     }
                     default -> {
-                        if(messageText.startsWith("Ок: ") ||messageText.startsWith("Ok: ")){
+                        if (messageText.startsWith("Ок: ") || messageText.startsWith("Ok: ")) {
                             String[] parts = messageText.split(": ");
-                            try{
+                            try {
                                 long reportId = Long.parseLong(parts[1]);
                                 Report report = reportService.findReportById(reportId);
                                 report.setIsReportValid(true);
                                 reportService.updateReport(report);
-                            }catch (NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 sendMessage(chatId, "Проверьте корректность ID");
                             }
                         }
                         sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowVoloMainChoice());
                     }
                 }
-            }
-            else {
-            if(messageText.startsWith("Вот мой отчет")){
-                parseReportMessage(chatId, update.getMessage());
-            }
-            else switch (messageText) {
-                //case "/start" -> startCommandReceived(chatId, update.getMessage());
-                case "/start" -> createStartButton(chatId);
+            } else switch (messageText) {
+                case "/start" -> {
+                    if (userService.findUserByChatId(chatId) == null) createStartButton(chatId);
+                    else sendButtons(chatId, "Выбери питомник:", List.of(telegramBotConfiguration.getRowShelters()));
+                }
                 case "Кошки" -> {
                     sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
                     sessions.put(chatId, 1L);
@@ -127,7 +123,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                 case "О приюте" -> sendButtons(chatId, "Что вы хотите узнать?", telegramBotConfiguration.getRowInfoShelterChoice());
                 case "Как взять питомца" -> {
                     List<KeyboardRow> keyboardRows = telegramBotConfiguration.getRowHowGetAnimalChoice();
-                    if(sessions.get(chatId) == 2L){
+                    if (sessions.get(chatId) == 2L) {
                         keyboardRows.add(new KeyboardRow(List.of(new KeyboardButton("Советы кинолога"))));
                     }
                     sendButtons(chatId, "Что вы хотите узнать?", keyboardRows);
@@ -136,42 +132,94 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     sendMessage(chatId, "Пожалуйста отправте отчет в формате:");
                     //В данном случаи номер договора = id в DB нашего adoption, предполагается что когда человек будет забирать питомца, ему сообщат номер договора
                     sendMessage(chatId, "Вот мой отчет. Номер договора: Опишите как дела у вашего питомца, все ли хорошо. Возникли ли какие нибуть трудности. Прикрепите фото.");
-                    sendMessage(chatId,"Например:");
+                    sendMessage(chatId, "Например:");
                     sendMessage(chatId, "Вот мой отчет. 32: У нас с Кузей все хорошо, едим 3 раза в день, вчера сходили в клинику поставить прививки, сейчас Кузя отдыхает, Смотрите какой он милый) Фото.");
                 }
                 case "Позвать волонтера" -> {
                     Random random = new Random();
-                   List<User> volunteers = userService.findUsersByRole("VOLUNTEER");
-                   User volunteer = volunteers.get(random.nextInt(volunteers.size()));
-                   User client = userService.findUserByChatId(chatId);
-                   sendMessage(volunteer.getChatId(), "Свяжитесь пожалуйста с пользователем, у него появились вопросы.");
-                   sendMessage(volunteer.getChatId(), "Имя пользователя: "+ client.getName());
-                   sendMessage(volunteer.getChatId(), "Контактный телефон: "+ client.getPhone());
-                   sendButtons(chatId, "Мы отправили ваши данные волонтеру, с вами скоро свяжутся. Хотите что-нибуть узнать?", telegramBotConfiguration.getRowMainChoice());
+                    List<User> volunteers = userService.findUsersByRole("VOLUNTEER");
+                    User volunteer = volunteers.get(random.nextInt(volunteers.size()));
+                    User client = userService.findUserByChatId(chatId);
+                    sendMessage(volunteer.getChatId(), "Свяжитесь пожалуйста с пользователем, у него появились вопросы.");
+                    sendMessage(volunteer.getChatId(), "Имя пользователя: " + client.getName());
+                    sendMessage(volunteer.getChatId(), "Контактный телефон: " + client.getPhone());
+                    sendButtons(chatId, "Мы отправили ваши данные волонтеру, с вами скоро свяжутся. Хотите что-нибуть узнать?", telegramBotConfiguration.getRowMainChoice());
                 }
                 case "Выбрать другое животное" -> {
                     sessions.remove(chatId);
                     startCommandReceived(chatId, update.getMessage());
                 }
-                case "Меню" ->
-                        sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
-                //Так как инфа у нас пока что только одна в шелтере, то пока что так. Позже надо подправить
-                case "Общая информация", "Адрес и режим работы", "Получить пропуск для машины",
-                        "Техника безопасности", "Правила знакомства", "Список документов", "Рекомендации по транспортировке",
-                        "Рекомендации по обустройству для детёныша", "Рекомендации по обустройству для взрослого животного",
-                        "Рекомендации по обустройству для ограниченного животного", "Причины отказа" ->{
+                
+                case "Меню" -> sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
+                case "Общая информация"  ->{
                     Shelter shelters = shelterService.findShelters(sessions.get(chatId));
                     sendMessage(chatId, shelters.getInfo());
                     sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Адрес и режим работы" ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAddressShelter());
+                    sendMessage(chatId, shelters.getWorkingTime());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Получить пропуск для машины" -> {
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getDrivingDirections());
+                    sendMessage(chatId, shelters.getSecurityContactDetails());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Техника безопасности" ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getSafetyTechnique());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Список документов"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getDocList());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по транспортировке" ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceTransport());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по обустройству для детёныша"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceCub());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по обустройству для взрослого животного"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceAdult());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Рекомендации по обустройству для ограниченного животного"->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAdviceInvalid());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Причины отказа" -> {
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getRefusalReasons());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
 
                 }
-                case "Отправить нам ваши контактные данные" ->{
+                case "Советы кинолога" ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getDopInfo());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Отправить нам ваши контактные данные" -> {
                     checkUser(chatId, update.getMessage());
                 }
-                default ->
+                default -> {
+                    if (messageText.startsWith("Вот мой отчет")) {
+                        parseReportMessage(chatId, update.getMessage());
+                    } else
                         sendButtons(chatId, "Я затрудняюсь ответить на это, позвать волонтера?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
             }
-        }}
+        }
     }
 
     @Override

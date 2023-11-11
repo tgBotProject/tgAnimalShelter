@@ -65,6 +65,7 @@ public class AllTelegramBotConfiguration {
         rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Техника безопасности"))));
         rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Отправить нам ваши контактные данные"))));
         rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Позвать волонтера"))));
+        rowInfoShelterChoice.add(new KeyboardRow(List.of(new KeyboardButton("Меню"))));
 
         rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Правила знакомства"))));
         rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Список документов"))));
@@ -75,6 +76,7 @@ public class AllTelegramBotConfiguration {
         rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Причины отказа"))));
         rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Отправить нам ваши контактные данные"))));
         rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Позвать волонтера"))));
+        rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Меню"))));
 
         rowVoloMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Просмотреть отчеты за сегодня"))));
         rowVoloMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Как подтвердить отчеты?"))));

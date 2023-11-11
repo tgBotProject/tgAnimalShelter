@@ -48,8 +48,8 @@ public class ShelterController {
             )
     @PostMapping()
     public ResponseEntity<Shelter> addShelters(@RequestBody Shelter shelters) {
-        Shelter addShelters = shelterService.addShelters(shelters);
-        return ResponseEntity.ok(addShelters);
+        Shelter addShelter = shelterService.addShelters(shelters);
+        return ResponseEntity.ok(addShelter);
     }
 
     @Operation
@@ -77,11 +77,11 @@ public class ShelterController {
             )
     @PutMapping
     public ResponseEntity<Shelter> editShelters(@RequestBody Shelter shelters) {
-        Shelter editShelters = shelterService.editShelter(shelters);
-        if (editShelters == null) {
+        Shelter editShelter = shelterService.editShelter(shelters);
+        if (editShelter == null) {
             return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.ok(editShelters);
+        return ResponseEntity.ok(editShelter);
     }
 
     @Operation
