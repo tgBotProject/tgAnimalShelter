@@ -152,8 +152,24 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                 }
                 case "Меню" -> sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
                 //Так как инфа у нас пока что только одна в шелтере, то пока что так. Позже надо подправить
-                case "Общая информация", "Адрес и режим работы", "Получить пропуск для машины",
-                        "Техника безопасности", "Правила знакомства", "Список документов", "Рекомендации по транспортировке",
+                case "Общая информация"  ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getInfo());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Адрес и режим работы" ->{
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getAddressShelter());
+                    sendMessage(chatId, shelters.getWorkingTime());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Получить пропуск для машины" -> {
+                    Shelter shelters = shelterService.findShelters(sessions.get(chatId));
+                    sendMessage(chatId, shelters.getDrivingDirections());
+                    sendMessage(chatId, shelters.getSecurityContactDetails());
+                    sendButtons(chatId, "Вы хотели бы что-то еще?", List.of(telegramBotConfiguration.getRowDefault()));
+                }
+                case "Техника безопасности", "Правила знакомства", "Список документов", "Рекомендации по транспортировке",
                         "Рекомендации по обустройству для детёныша", "Рекомендации по обустройству для взрослого животного",
                         "Рекомендации по обустройству для ограниченного животного", "Причины отказа" -> {
                     Shelter shelters = shelterService.findShelters(sessions.get(chatId));
