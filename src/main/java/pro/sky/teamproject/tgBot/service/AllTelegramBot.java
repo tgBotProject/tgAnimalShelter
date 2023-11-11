@@ -149,6 +149,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     sessions.remove(chatId);
                     startCommandReceived(chatId, update.getMessage());
                 }
+                
                 case "Меню" -> sendButtons(chatId, "Что бы вы хотели?", telegramBotConfiguration.getRowMainChoice());
                 case "Общая информация"  ->{
                     Shelter shelters = shelterService.findShelters(sessions.get(chatId));
