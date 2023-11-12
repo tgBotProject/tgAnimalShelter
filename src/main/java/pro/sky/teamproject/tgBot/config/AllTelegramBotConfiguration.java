@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +77,7 @@ public class AllTelegramBotConfiguration {
         rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Позвать волонтера"))));
         rowHowGetAnimalChoice.add(new KeyboardRow(List.of(new KeyboardButton("Меню"))));
 
-        rowVoloMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Просмотреть отчеты за сегодня"))));
+        rowVoloMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Просмотреть непроверенные отчеты"))));
         rowVoloMainChoice.add(new KeyboardRow(List.of(new KeyboardButton("Как подтвердить отчеты?"))));
     }
 

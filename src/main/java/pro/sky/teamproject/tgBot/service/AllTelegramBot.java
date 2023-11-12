@@ -69,22 +69,28 @@ public class AllTelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText() || update.getMessage().hasContact()) {
+        if (update.hasMessage() && update.getMessage().hasText()
+                || update.getMessage().hasContact()
+                || update.getMessage().hasPhoto()) {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
             if (update.getMessage().hasContact()) {
                 startCommandReceived(chatId, update.getMessage());
-            } else
-            if (userService.findUserByChatId(chatId) != null && userService.findUserByChatId(chatId).getRole().equals(Role.VOLUNTEER)) {
+            } else if (update.getMessage().getCaption() != null) {
+                if (update.getMessage().getCaption().startsWith("Вот мой отчет")) {
+                    parseReportMessage(chatId, update.getMessage());
+                } else
+                    sendButtons(chatId, "Я затрудняюсь ответить на это, позвать волонтера?", List.of(telegramBotConfiguration.getRowDefault()));
+            } else if (userService.findUserByChatId(chatId) != null && userService.findUserByChatId(chatId).getRole().equals(Role.VOLUNTEER)) {
                 switch (messageText) {
-                    case "Просмотреть отчеты за сегодня" -> {
-                        List<Report> reports = reportService.findAllReports();
+                    case "Просмотреть непроверенные отчеты" -> {
+                        List<Report> reports;
+                        reports = reportService.findAllReports();
                         reports.stream().forEach(r -> {
-                            if (checkDateTime(r.getDatetime())) {
-                                sendMessage(chatId, "Отчет от пользователя: " + r.getUser().getName());
-                                sendMessage(chatId, "ID отчета: " + r.getId());
-                                sendMessage(chatId, r.getInfo());
-                                sendPhoto(chatId, r.getPhoto());
+                            if (r.getIsReportValid() == null) {
+                                sendMessage(chatId, String.format("ID %d, время %s, пользовател %s\nОтчет: %s",
+                                        r.getId(), r.getDatetime(), r.getUser().getName(), r.getInfo()));
+                                if (r.getPhoto() != null) sendMessage(chatId, r.getPhoto());
                             }
                         });
                     }
@@ -140,9 +146,9 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                     List<User> volunteers = userService.findUsersByRole("VOLUNTEER");
                     User volunteer = volunteers.get(random.nextInt(volunteers.size()));
                     User client = userService.findUserByChatId(chatId);
-                    sendMessage(volunteer.getChatId(), "Свяжитесь пожалуйста с пользователем, у него появились вопросы.");
-                    sendMessage(volunteer.getChatId(), "Имя пользователя: " + client.getName());
-                    sendMessage(volunteer.getChatId(), "Контактный телефон: " + client.getPhone());
+                    String messageForVolunteer = String.format("Свяжитесь пожалуйста с пользователем %s, у него появились вопросы. Телефон %s",
+                            client.getName(), client.getPhone());
+                    sendMessage(volunteer.getChatId(), messageForVolunteer);
                     sendButtons(chatId, "Мы отправили ваши данные волонтеру, с вами скоро свяжутся. Хотите что-нибуть узнать?", telegramBotConfiguration.getRowMainChoice());
                 }
                 case "Выбрать другое животное" -> {
@@ -331,7 +337,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
      * @param message  объект сообщения, содержащий отчет о питомце
      */
     private void parseReportMessage(long chatId, Message message){
-        String messageText = message.getText();
+        String messageText = message.getCaption();
         String[] parts = messageText.split(": ", 2);
         if(parts.length == 2 && message.hasPhoto()){
             String id = parts[0].replaceAll("[^0-9]", "");
@@ -349,7 +355,25 @@ public class AllTelegramBot extends TelegramLongPollingBot {
             sendButtons(chatId, "Ваш отчет сохранен, вы хотите что нибуть еще?", List.of(telegramBotConfiguration.getRowDefault()));
         } else sendButtons(chatId, "Ваш отчет нераспознан, попробуйте снова.", List.of(telegramBotConfiguration.getRowDefault()));
     }
-
+//    private void parseReportMessage(long chatId, Message message){
+//        String messageText = message.getText();
+//        String[] parts = messageText.split(": ", 2);
+//        if(parts.length == 2 && message.hasPhoto()){
+//            String id = parts[0].replaceAll("[^0-9]", "");
+//            String text = parts[1];
+//            Report report = new Report();
+//            report.setUser(userService.findUserByChatId(chatId));
+//            report.setInfo(text);
+//            List<PhotoSize> photos = message.getPhoto();
+//            PhotoSize photo = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
+//            if(photo != null){
+//                report.setPhoto(photo.getFileId());
+//            }
+//            report.setDatetime(new Timestamp(System.currentTimeMillis()));
+//            reportService.addReport(report);
+//            sendButtons(chatId, "Ваш отчет сохранен, вы хотите что нибуть еще?", List.of(telegramBotConfiguration.getRowDefault()));
+//        } else sendButtons(chatId, "Ваш отчет нераспознан, попробуйте снова.", List.of(telegramBotConfiguration.getRowDefault()));
+//    }
     /**
      * Проверяет, находится ли временная метка в пределах сегодняшнего дня.
      *
