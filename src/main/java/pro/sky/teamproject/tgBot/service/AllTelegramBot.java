@@ -19,6 +19,7 @@ import pro.sky.teamproject.tgBot.model.Shelter;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 import pro.sky.teamproject.tgBot.model.user.Role;
 import pro.sky.teamproject.tgBot.model.user.User;
+import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -42,17 +43,18 @@ public class AllTelegramBot extends TelegramLongPollingBot {
     private ShelterService shelterService;
     private UserService userService;
     private ReportService reportService;
-    private AdoptionService adoptionService;
+    private AdoptionRepository adoptionService;
 
     public AllTelegramBot(AllTelegramBotConfiguration telegramBotConfiguration,
                           ShelterService shelterService,
                           UserService userService,
-                          ReportService reportService){
+                          ReportService reportService,  AdoptionRepository adoptionService){
         this.telegramBotConfiguration = telegramBotConfiguration;
         sessions = new HashMap<>();
         this.shelterService = shelterService;
         this.userService = userService;
         this.reportService = reportService;
+        this.adoptionService = adoptionService;
     }
     @Override
     public String getBotUsername(){
@@ -92,8 +94,9 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                         reports.stream().forEach(r -> {
                             if (r.getIsReportValid() == null) {
                                 sendMessage(chatId, String.format("ID %d, время %s, пользовател %s\nОтчет: %s",
-                                        r.getId(), r.getDatetime(), r.getUser().getName(), r.getInfo()));
-                                if (r.getPhoto() != null) sendMessage(chatId, r.getPhoto());
+//                                        r.getId(), r.getDatetime(), r.getUser().getName(), r.getInfo()));
+                                        r.getId(), r.getDatetime(), r.getAdoption().getUser().getName(), r.getInfo()));
+                                if (r.getPhoto() != null) sendPhoto(chatId, r.getPhoto());
                             }
                         });
                     }
@@ -347,10 +350,11 @@ public class AllTelegramBot extends TelegramLongPollingBot {
             try {
                 String adoptionIdStr = parts[0].replaceAll("[^0-9]", "");
                 Long adoptionId = Long.parseLong(adoptionIdStr);
-                Adoption adoption = adoptionService.findAdoption(adoptionId);
+                Adoption adoption = adoptionService.findById(adoptionId).get();
 
                 String text = parts[1];
                 Report report = new Report();
+//                report.setUser(userService.findUserByChatId(chatId));
                 report.setAdoption(adoption);
                 report.setInfo(text);
 

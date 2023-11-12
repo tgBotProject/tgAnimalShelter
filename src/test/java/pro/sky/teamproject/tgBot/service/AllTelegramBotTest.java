@@ -13,6 +13,7 @@ import pro.sky.teamproject.tgBot.config.AllTelegramBotConfiguration;
 import pro.sky.teamproject.tgBot.model.Report;
 import pro.sky.teamproject.tgBot.model.user.Role;
 import pro.sky.teamproject.tgBot.model.user.User;
+import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,14 @@ public class AllTelegramBotTest {
     private ReportService reportService;
     @Mock
     private ShelterService shelterService;
+    @Mock
+    private AdoptionRepository adoptionService;
     private AllTelegramBotConfiguration telegramBotConfiguration;
 
     @BeforeEach
     public void setUp() {
         telegramBotConfiguration = new AllTelegramBotConfiguration();
-        telegramBot = new AllTelegramBot(telegramBotConfiguration,shelterService,userService,reportService);
+        telegramBot = new AllTelegramBot(telegramBotConfiguration,shelterService,userService,reportService, adoptionService);
     }
 
     @Test

@@ -38,7 +38,6 @@ public class ReportServiceImpl implements ReportService {
     public Report updateReport(Report report) {
         Report foundReport = findReportById(report.getId());
 
-        foundReport.setAdoption(report.getAdoption());
         foundReport.setPhoto(report.getPhoto());
         foundReport.setInfo(report.getInfo());
         foundReport.setIsReportValid(report.getIsReportValid());
