@@ -25,6 +25,7 @@ public class ShelterController {
         this.shelterService = shelterService;
     }
 
+
     /* ADD shelter */
     @Operation(summary = "Добавить новый приют")
     @ApiResponses(value = {
@@ -37,6 +38,7 @@ public class ShelterController {
         Shelter addShelter = shelterService.addShelters(shelters);
         return ResponseEntity.ok(addShelter);
     }
+
 
     /* UPDATE shelter */
     @Operation(summary = "Изменить данные приюта")
@@ -54,6 +56,7 @@ public class ShelterController {
         return ResponseEntity.ok(editShelter);
     }
 
+
     /* GET shelter by ID */
     @Operation(summary = "Получить приют по id")
     @ApiResponses(value = {
@@ -65,6 +68,7 @@ public class ShelterController {
     public ResponseEntity<Shelter> findShelters(@RequestParam(required = false) Long id) {
         return ResponseEntity.ok(shelterService.findShelters(id));
     }
+
 
     /* DELETE shelter */
     @Operation(summary = "Удалить приют")

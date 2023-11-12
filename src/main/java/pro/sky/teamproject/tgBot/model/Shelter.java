@@ -1,5 +1,6 @@
 package pro.sky.teamproject.tgBot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -93,6 +94,7 @@ public class Shelter {
      */
     private String info;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "shelter")
     private List<Animal> animal;
 }
