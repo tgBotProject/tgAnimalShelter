@@ -1,7 +1,6 @@
 package pro.sky.teamproject.tgBot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -92,7 +92,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void findUserByRoleTest() throws Exception {
+    public void findUserByRoleTest() {
         User user1 = new User();
         user1.setName("name");
         user1.setRole(Role.VOLUNTEER);
@@ -110,7 +110,7 @@ public class UserControllerTest {
 
         List<User> users = userService.findUsersByRole(String.valueOf(Role.ADOPTER));
 
-        Assert.assertEquals(expected, users);
+        assertEquals(expected, users);
     }
 
     @Test
