@@ -123,3 +123,17 @@ ALTER TABLE shelters
 -- changeset heimtn:51.8
 ALTER TABLE shelters
     ADD COLUMN dop_info TEXT;
+
+-- changeset beshik7:47
+ALTER TABLE reports
+    DROP COLUMN user_id;
+
+-- changeset beshik7:47.1
+ALTER TABLE reports
+    ADD COLUMN adoption_id BIGINT;
+
+-- changeset beshik7:47.2
+ALTER TABLE reports
+    ADD CONSTRAINT fk_report_adoption
+    FOREIGN KEY (adoption_id)
+    REFERENCES adoptions (id);

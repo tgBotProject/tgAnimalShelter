@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 import pro.sky.teamproject.tgBot.model.user.User;
 
 import java.sql.Timestamp;
@@ -21,10 +22,10 @@ public class Report {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "adoption_id")
+    private Adoption adoption;
 
-//    @Lob // указывает, что поле должно быть представлено как Large Object
+//    передается через telegramApi
     @Column(name = "photo_url")
     private String photo;
 

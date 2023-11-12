@@ -1,5 +1,6 @@
 package pro.sky.teamproject.tgBot.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.teamproject.tgBot.config.AllTelegramBotConfiguration;
 import pro.sky.teamproject.tgBot.model.Report;
 import pro.sky.teamproject.tgBot.model.Shelter;
+import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 import pro.sky.teamproject.tgBot.model.user.Role;
 import pro.sky.teamproject.tgBot.model.user.User;
 
@@ -40,6 +42,7 @@ public class AllTelegramBot extends TelegramLongPollingBot {
     private ShelterService shelterService;
     private UserService userService;
     private ReportService reportService;
+    private AdoptionService adoptionService;
 
     public AllTelegramBot(AllTelegramBotConfiguration telegramBotConfiguration,
                           ShelterService shelterService,
@@ -81,7 +84,8 @@ public class AllTelegramBot extends TelegramLongPollingBot {
                         List<Report> reports = reportService.findAllReports();
                         reports.stream().forEach(r -> {
                             if (checkDateTime(r.getDatetime())) {
-                                sendMessage(chatId, "Отчет от пользователя: " + r.getUser().getName());
+                                //добавил логику взаимосвязи на Report к Adoption, вместо User. @beshik7
+                                sendMessage(chatId, "Отчет от пользователя: " + r.getAdoption().getUser().getName());
                                 sendMessage(chatId, "ID отчета: " + r.getId());
                                 sendMessage(chatId, r.getInfo());
                                 sendPhoto(chatId, r.getPhoto());
@@ -334,20 +338,32 @@ public class AllTelegramBot extends TelegramLongPollingBot {
         String messageText = message.getText();
         String[] parts = messageText.split(": ", 2);
         if(parts.length == 2 && message.hasPhoto()){
-            String id = parts[0].replaceAll("[^0-9]", "");
-            String text = parts[1];
-            Report report = new Report();
-            report.setUser(userService.findUserByChatId(chatId));
-            report.setInfo(text);
-            List<PhotoSize> photos = message.getPhoto();
-            PhotoSize photo = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
-            if(photo != null){
-               report.setPhoto(photo.getFileId());
+            //изменил логику взаимосвязи на Report к Adoption, вместо User @beshik7
+            try {
+                String adoptionIdStr = parts[0].replaceAll("[^0-9]", "");
+                Long adoptionId = Long.parseLong(adoptionIdStr);
+                Adoption adoption = adoptionService.findAdoption(adoptionId);
+
+                String text = parts[1];
+                Report report = new Report();
+                report.setAdoption(adoption);
+                report.setInfo(text);
+
+                List<PhotoSize> photos = message.getPhoto();
+                PhotoSize photo = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
+                if (photo != null) {
+                    report.setPhoto(photo.getFileId());
+                }
+
+                report.setDatetime(new Timestamp(System.currentTimeMillis()));
+                reportService.addReport(report);
+                sendButtons(chatId, "Ваш отчет сохранен, вы хотите что нибудь еще?", List.of(telegramBotConfiguration.getRowDefault()));
+            } catch (NumberFormatException | EntityNotFoundException e) {
+                sendMessage(chatId, "Произошла ошибка при обработке вашего отчета.");
             }
-            report.setDatetime(new Timestamp(System.currentTimeMillis()));
-            reportService.addReport(report);
-            sendButtons(chatId, "Ваш отчет сохранен, вы хотите что нибуть еще?", List.of(telegramBotConfiguration.getRowDefault()));
-        } else sendButtons(chatId, "Ваш отчет нераспознан, попробуйте снова.", List.of(telegramBotConfiguration.getRowDefault()));
+        } else {
+            sendButtons(chatId, "Ваш отчет нераспознан, попробуйте снова.", List.of(telegramBotConfiguration.getRowDefault()));
+        }
     }
 
     /**
