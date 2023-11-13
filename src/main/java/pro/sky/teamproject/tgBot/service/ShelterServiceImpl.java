@@ -1,5 +1,6 @@
 package pro.sky.teamproject.tgBot.service;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Shelter;
@@ -9,8 +10,9 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ShelterServiceImpl implements ShelterService {
-    private ShelterRepository shelterRepository;
+    private final ShelterRepository shelterRepository;
 
     /**
      * Метод добавления приюта.
@@ -62,6 +64,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getAddressShelterById(Long id) {
+        log.info("Was invoked method for get address shelter by id");
         return shelterRepository.getAddressShelterById(id);
     }
 
@@ -70,6 +73,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getWorkingTimeById(Long id) {
+        log.info("Was invoked method for get working time by id");
         return shelterRepository.getWorkingTimeById(id);
     }
 
@@ -78,6 +82,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getDrivingDirectionsById(Long id) {
+        log.info("Was invoked method for get driving directions by id");
         return shelterRepository.getDrivingDirectionsById(id);
     }
 
@@ -86,6 +91,7 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getSecurityContactDetailsById(Long id) {
+        log.info("Was invoked method for get security contact details by id");
         return shelterRepository.getSecurityContactDetailsById(id);
     }
 
@@ -94,11 +100,13 @@ public class ShelterServiceImpl implements ShelterService {
      */
     @Override
     public String getInfoById(Long id) {
+        log.info("Was invoked method for get info by id");
         return shelterRepository.getInfoById(id);
     }
 
     @Override
     public List<Shelter> findAllShelters() {
+        log.info("Was invoked method for find all shelters");
         return shelterRepository.findAll();
     }
 }
