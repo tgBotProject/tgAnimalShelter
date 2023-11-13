@@ -3,6 +3,7 @@ package pro.sky.teamproject.tgBot.service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.Animal;
@@ -16,6 +17,7 @@ import pro.sky.teamproject.tgBot.repository.AdoptionRepository;
 import pro.sky.teamproject.tgBot.model.adoption.Adoption;
 import pro.sky.teamproject.tgBot.repository.ReportRepository;
 import pro.sky.teamproject.tgBot.repository.UserRepository;
+import pro.sky.teamproject.tgBot.utils.MethodLog;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.List;
  * @author Dmitry Ldv236
  */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AdoptionServiceImpl implements AdoptionService {
 
@@ -49,6 +52,7 @@ public class AdoptionServiceImpl implements AdoptionService {
      */
     @Override
     public Adoption addAdoption(Long userId, Long animalId) {
+        log.info("Method {}, userId - {}, animalId - {}", MethodLog.getMethodName(), userId, animalId);
 
         //проверяем, что юзер с таким id существует, и что у него нет усыновлений на испытательном сроке
         //(отмененный или успешные допускаются)
@@ -70,22 +74,28 @@ public class AdoptionServiceImpl implements AdoptionService {
         newAdoption.setAdoptedDate(LocalDate.now());
         newAdoption.setTrialEndDate(LocalDate.now().plusDays(30));
         newAdoption.setStatus(Status.CURRENT);
-        return repository.save(newAdoption);
+
+        Adoption addedAdoption = repository.save(newAdoption);
+        log.info("Создано усыновление: {}", addedAdoption);
+        return addedAdoption;
     }
 
     @Override
     public List<Adoption> findAdoptions() {
+        log.info("Method {}", MethodLog.getMethodName());
         return repository.findAll();
     }
 
     @Override
     public Adoption findAdoption(Long id) {
+        log.info("Method {}, userId - {}", MethodLog.getMethodName(), id);
         return repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Adoption not found [userId=%d]", id)));
     }
 
     @Override
     public List<Adoption> findAdoptionsByUser(Long userId) {
+        log.info("Method {}, userId - {}", MethodLog.getMethodName(), userId);
         List<Adoption> foundAdoptions = repository.findAdoptionsByUserId(userId);
 
         if (foundAdoptions.isEmpty()) {
@@ -96,6 +106,7 @@ public class AdoptionServiceImpl implements AdoptionService {
 
     @Override
     public List<Adoption> findAdoptionsByAnimal(Long animalId) {
+        log.info("Method {}, animalId - {}", MethodLog.getMethodName(), animalId);
         List<Adoption> foundAdoptions = repository.findAdoptionsByAnimalId(animalId);
 
         if (foundAdoptions.isEmpty()) {
@@ -106,6 +117,7 @@ public class AdoptionServiceImpl implements AdoptionService {
 
     @Override
     public Adoption updateAdoption(Adoption adoption) {
+        log.info("Method {}, adoption - {}", MethodLog.getMethodName(), adoption);
 
         Adoption foundAdoption = findAdoption(adoption.getId());
         if (!foundAdoption.getStatus().equals(Status.CURRENT)) {
@@ -121,6 +133,7 @@ public class AdoptionServiceImpl implements AdoptionService {
 
     @Override
     public Adoption updateStatus(Long id, Status status, String note) {
+        log.info("Method {}, id - {}, status - {}", MethodLog.getMethodName(), id, status);
 
         Adoption foundAdoption = findAdoption(id);
         if (!foundAdoption.getStatus().equals(Status.CURRENT)) {
@@ -136,6 +149,7 @@ public class AdoptionServiceImpl implements AdoptionService {
 
     @Override
     public Adoption prolongTrialForDays(Long id, @Positive Integer days) {
+        log.info("Method {}, id - {}, days - {}", MethodLog.getMethodName(), id, days);
 
         Adoption foundAdoption = findAdoption(id);
         foundAdoption.setTrialEndDate(foundAdoption.getTrialEndDate().plusDays(days));
@@ -144,10 +158,12 @@ public class AdoptionServiceImpl implements AdoptionService {
 
     @Override
     public void deleteAdoption(Long id) {
+        log.info("Method {}, id - {}", MethodLog.getMethodName(), id);
         if (repository.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Adoption not found [Id=%d]", id));
         }
         repository.deleteById(id);
+        log.info("Удалено усыновление ID {}", id);
     }
 
     /**
@@ -156,14 +172,17 @@ public class AdoptionServiceImpl implements AdoptionService {
      */
     @Scheduled(cron = "0 0 23 * * *")
     public void checkAdoptionsOnEndTimeReached() {
+        log.info("Method {}", MethodLog.getMethodName());
 
         List<Adoption> adoptions = repository.findByTrialEndDateIsBeforeAndStatusLike
                 (LocalDate.now(), Status.CURRENT);
+        log.info("Найдено {} записей об усыновлении", adoptions.size());
         if (adoptions.isEmpty()) {return;}
 
         for (Adoption adoption : adoptions) {
             adoption.setStatus(Status.COMPLETED);
             repository.save(adoption);
+            log.info("Усыновление ID {} отмечено выполненным", adoption.getId());
         }
     }
 

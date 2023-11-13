@@ -2,10 +2,12 @@ package pro.sky.teamproject.tgBot.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pro.sky.teamproject.tgBot.model.user.Role;
 import pro.sky.teamproject.tgBot.model.user.User;
 import pro.sky.teamproject.tgBot.repository.UserRepository;
+import pro.sky.teamproject.tgBot.utils.MethodLog;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Objects;
  * @author Dmitry Ldv236
  */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
@@ -24,19 +27,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User addUser(User user) {
+        log.info("Method {}, user - {}", MethodLog.getMethodName(), user);
 
         user.setRole(Role.ADOPTER);
-        return repository.save(user);
+        User createdUser = repository.save(user);
+        log.info("Создан пользователь {}", createdUser);
+
+        return createdUser;
     }
 
     @Override
     public List<User> findUsers() {
+        log.info("Method {}", MethodLog.getMethodName());
 
         return repository.findAll();
     }
 
     @Override
     public User findUser(Long id) {
+        log.info("Method {}, id - {}", MethodLog.getMethodName(), id);
 
         return repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("User not found [userId=%s]", id)));
@@ -44,15 +53,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByChatId(Long chatId) {
-        User foundUser = repository.findByChatId(chatId);
-//        if (foundUser == null) {
-//            throw new EntityNotFoundException(String.format("User not found [chatId=%s]", chatId));
-//        }
-        return foundUser;
+        log.info("Method {}, id - {}", MethodLog.getMethodName(), chatId);
+        return repository.findByChatId(chatId);
     }
 
     @Override
     public List<User> findUsersByRole(String role) {
+        log.info("Method {}, role - {}", MethodLog.getMethodName(), role);
         List<Role> roles = Arrays.stream(Role.values()).toList();
         if (roles.stream().filter(r -> Objects.equals(r.name(), role)).findFirst().isEmpty()) {
             throw new IllegalArgumentException("Доступные роли: " + roles);
@@ -68,6 +75,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User updateUser(User user) {
+        log.info("Method {}, user - {}", MethodLog.getMethodName(), user);
 
         User foundUser = findUser(user.getId());
 
@@ -80,6 +88,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUser(Long id) {
+        log.info("Method {}, id - {}", MethodLog.getMethodName(), id);
 
         if (repository.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("User not found [Id=%s]", id));
