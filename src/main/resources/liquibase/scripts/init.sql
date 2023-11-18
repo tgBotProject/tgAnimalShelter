@@ -5,6 +5,10 @@ CREATE TABLE shelters
 (
     id BIGINT PRIMARY KEY ,
     name TEXT,
+    address_shelter TEXT,
+    working_time TEXT,
+    driving_directions TEXT,
+    security_contact_details TEXT,
     info TEXT
 );
 
@@ -35,6 +39,10 @@ CREATE TABLE animals
 
     CONSTRAINT animal_shelter_fk FOREIGN KEY (shelter_id) REFERENCES shelters(id)
 );
+-- changeset beshik7:9.1
+ALTER TABLE animals
+    ALTER COLUMN photo_url TYPE BYTEA USING photo_url::bytea;
+
 
 -- changeset ldv236:10.2
 CREATE TABLE adoptions
@@ -52,7 +60,7 @@ CREATE TABLE adoptions
     CONSTRAINT adoption_user_fk     FOREIGN KEY (user_id)       REFERENCES users(id)
 );
 
--- changeset beshik7:9.1
+-- changeset beshik7:9.2
 CREATE TABLE reports
 (
     id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -65,3 +73,67 @@ CREATE TABLE reports
 
     CONSTRAINT report_user_fk FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- changeset beshik7:9.3
+ALTER TABLE reports
+    DROP COLUMN report_valid;
+
+-- changeset beshik7:9.4
+ALTER TABLE reports
+    ALTER COLUMN is_report_valid DROP DEFAULT,
+    ALTER COLUMN is_report_valid DROP NOT NULL,
+    ALTER COLUMN is_report_valid SET DEFAULT NULL;
+
+-- changeset beshik7:9.5
+ALTER TABLE reports
+    ALTER COLUMN photo_url TYPE BYTEA USING photo_url::bytea;
+
+-- changeset heimtn:45
+ALTER TABLE reports
+    ALTER COLUMN photo_url TYPE TEXT USING photo_url::text;
+
+-- changeset ldv236:43
+ALTER TABLE animals
+    ALTER COLUMN photo_url TYPE TEXT;
+
+-- changeset heimtn:51
+ALTER TABLE shelters
+    ADD COLUMN safety_technique TEXT;
+-- changeset heimtn:51.1
+ALTER TABLE shelters
+    ADD COLUMN dating_rules TEXT;
+-- changeset heimtn:51.2
+ALTER TABLE shelters
+    ADD COLUMN doc_list TEXT;
+-- changeset heimtn:51.3
+ALTER TABLE shelters
+    ADD COLUMN advice_transport TEXT;
+-- changeset heimtn:51.4
+ALTER TABLE shelters
+    ADD COLUMN advice_cub TEXT;
+-- changeset heimtn:51.5
+ALTER TABLE shelters
+    ADD COLUMN advice_adult TEXT;
+-- changeset heimtn:51.6
+ALTER TABLE shelters
+    ADD COLUMN advice_invalid TEXT;
+-- changeset heimtn:51.7
+ALTER TABLE shelters
+    ADD COLUMN refusal_reasons TEXT;
+-- changeset heimtn:51.8
+ALTER TABLE shelters
+    ADD COLUMN dop_info TEXT;
+
+-- changeset beshik7:47
+ALTER TABLE reports
+    DROP COLUMN user_id;
+
+-- changeset beshik7:47.1
+ALTER TABLE reports
+    ADD COLUMN adoption_id BIGINT;
+
+-- changeset beshik7:47.2
+ALTER TABLE reports
+    ADD CONSTRAINT fk_report_adoption
+    FOREIGN KEY (adoption_id)
+    REFERENCES adoptions (id);

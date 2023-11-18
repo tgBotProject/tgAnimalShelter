@@ -1,44 +1,27 @@
 package pro.sky.teamproject.tgBot.service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import pro.sky.teamproject.tgBot.model.Shelters;
-import pro.sky.teamproject.tgBot.repository.ShelterRepository;
 
-@Service
-public class ShelterService {
-    Logger logger = LoggerFactory.getLogger(Shelters.class);
-    private ShelterRepository shelterRepository;
+import pro.sky.teamproject.tgBot.model.Shelter;
 
-    /**
-     * Метод добавления приюта.
-     */
-    public Shelters addShelters(Shelters shelter) {
-        logger.info("Was invoked method for add shelter");
-        return shelterRepository.save(shelter);
-    }
+import java.util.List;
 
-    /**
-     * Метод поиска приюта по id.
-     */
-    public Shelters findShelters(long id) {
-        logger.info("Was invoked method for find shelter");
-        return shelterRepository.findById(id).get();
-    }
+public interface ShelterService {
 
-    /**
-     * Метод редактирования информации о приюте.
-     */
-    public Shelters editShelters(Shelters shelter) {
-        logger.info("Was invoked method for edit shelter");
-        return shelterRepository.save(shelter);
-    }
+    Shelter addShelters(Shelter shelter);
 
-    /**
-     * Метод удаления приюта по id.
-     */
-    public void deleteShelter(long id) {
-        logger.info("Was invoked method for delete shelter");
-        shelterRepository.deleteById(id);
-    }
+    Shelter findShelters(Long id);
+
+    Shelter editShelter(Shelter shelter);
+
+    void deleteShelter(Long id);
+
+    String getAddressShelterById(Long id);
+
+    String getWorkingTimeById(Long id);
+
+    String getDrivingDirectionsById(Long id);
+
+    String getSecurityContactDetailsById(Long id);
+
+    String getInfoById(Long id);
+    List<Shelter> findAllShelters();
 }

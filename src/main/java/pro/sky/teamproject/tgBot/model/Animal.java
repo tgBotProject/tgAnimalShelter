@@ -26,7 +26,8 @@ public class Animal {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "photo_url", length = 255)
+//    @Lob // указывает, что поле должно быть представлено как Large Object
+    @Column(name = "photo_url")
     private String photoUrl;
 
     @Column(name = "birthday")
@@ -46,13 +47,13 @@ public class Animal {
 
     @ManyToOne
     @JoinColumn(name = "shelter_id") // имя колонки в таблице animals, которая будет хранить ID связанного приюта.
-    private Shelters shelter;
+    private Shelter shelter;
 
-    public Shelters getShelter() {
+    public Shelter getShelter() {
         return shelter;
     }
 
-    public void setShelter(Shelters shelter) {
+    public void setShelter(Shelter shelter) {
         this.shelter = shelter;
     }
 
